@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import Promotion from "./component/Promotion";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "jquery/dist/jquery.min.js";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Promotionprice from "./component/Promotionprice";
+import Order from "./component/order";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/promotion" element={<Promotion />} />
+        <Route path="/promotionprice" element={<Promotionprice />} />
+        <Route path="/order" element={<Order />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
