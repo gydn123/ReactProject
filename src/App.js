@@ -7,6 +7,8 @@ import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Promotionprice from "./component/Promotionprice";
 import Order from "./component/order";
+import Mypoint from "./component/mypoint";
+import Orderlist from "./component/orderlist";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/promotion" element={<Promotion />} />
         <Route path="/promotionprice" element={<Promotionprice />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/mypoint" element={<Mypoint />} />
+        <Route path="/orderlist" element={<Orderlist />} />
       </Routes>
     </BrowserRouter>
   );

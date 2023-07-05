@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import "./order.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -10,8 +10,10 @@ function useQuery() {
 }
 
 const Order = () => {
+  const navigate = useNavigate();
   const query = useQuery();
   const promotion_id = query.get("promotion_id");
+  const member_id = query.get("member_id");
   const [sum, setSum] = useState(0);
   const [mypoint, setMyPoint] = useState(0);
   const [data, setData] = useState({ price: [], mypoint: [] });
@@ -25,49 +27,22 @@ const Order = () => {
   const fetchData1 = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/order?promotion_id=${promotion_id}`
+        `http://localhost:8080/order?promotion_id=${promotion_id}&member_id=${member_id}`
       );
       const data1 = response.data;
-      setMyPoint(data1.mypoint[0]);
+      setMyPoint(data1.mypoint[0]["sum_point"]);
       setData(data1);
       setIsDataLoaded(true);
+      console.log(member_id + "ididid");
+      console.log(response);
+      console.log(mypoint + "@@mypointmypoint");
+      console.log(data1.mypoint + "@@mypointmypoint");
     } catch (error) {
       console.error(error);
     }
   };
-  // const handleMinusClick = (event) => {
-  //   countticket(event.target.className);
-  //   const row = event.target.closest(".table-row");
-  //   const priceValue = parseInt(
-  //     row.querySelector(".price").textContent.replace(/[^0-9]/g, "")
-  //   );
-  //   const numbox = row.querySelector(".numbox");
-  //   if (numbox.value <= 0) {
-  //     return;
-  //   }
-  //   const minusNum = parseInt(numbox.value) - 1;
-  //   numbox.value = minusNum;
-
-  //   if (row.querySelector(".ticket-id").value !== null) {
-  //     const dataa = `<td>${priceValue * minusNum}</td>`;
-  //     row.querySelector(".total").innerHTML = dataa;
-  //   }
-
-  //   updateSum();
-  // };
 
   const countTicket = (type, ticketId) => {
-    // if (type === "plus") {
-    //   if (count < 10) {
-    //     let count1 = count + 1;
-    //     setCount(count1);
-    //   }
-    // } else if (type === "minus") {
-    //   if (count > 0) {
-    //     let count1 = count - 1;
-    //     setCount(count1);
-    //   }
-    // }
     const row = document
       .querySelector(`.table-row .ticket-id[value="${ticketId}"]`)
       .closest(".table-row");
@@ -97,12 +72,6 @@ const Order = () => {
     const priceValue = parseInt(
       row.querySelector(".price").textContent.replace(/[^0-9]/g, "")
     );
-    // const numbox = row.querySelector(".numbox");
-    // if (numbox.value >= 10) {
-    //   return;
-    // }
-    // const plusNum = parseInt(numbox.value) + 1;
-    // numbox.value = plusNum;
     console.log(count + "@@@count");
 
     const newTicketCount =
@@ -117,11 +86,6 @@ const Order = () => {
       row.querySelector(".total").innerHTML = dataa;
     }
 
-    // if (row.querySelector(".ticket-id").value !== null) {
-    //   const dataa = `<td>${priceValue * parseInt(numbox.value)}</td>`;
-    //   row.querySelector(".total").innerHTML = dataa;
-    // }
-
     updateSum();
   };
 
@@ -134,11 +98,20 @@ const Order = () => {
     });
     setSum(totalSum);
   };
+  const handlePointChange = (e) => {
+    const value = e.target.value;
+    if (value < 0 || value > data.mypoint[0]["sum_point"]) {
+      alert("사용가능한 포인트가 아닙니다.");
+      setMyPoint(data.mypoint[0]["sum_point"]);
+    } else {
+      setMyPoint(value);
+    }
+  };
 
   const handleBuyClick = () => {
     if (window.confirm("구매 하시겠습니까?")) {
       const myArray = [];
-      const usePoint = document.getElementById("mypoint").value;
+      const usePoint = mypoint;
       const tableRows = document.querySelectorAll(".table-row");
       tableRows.forEach((row) => {
         const myMap = new Map();
@@ -156,9 +129,26 @@ const Order = () => {
         }))
       );
 
-      console.log(myJSON);
+      console.log(myJSON + "myJSON");
 
-      // Make AJAX request here
+      //여기에 ajax 요청 만들기
+      const url = "http://localhost:8080/order";
+      const dataToSubmit = {
+        myJSON: myJSON,
+        use_point: usePoint,
+      };
+
+      axios
+        .post(url, dataToSubmit)
+        .then((response) => {
+          console.log(response.data);
+          alert("구매해 주셔서 감사합니다!");
+
+          navigate("/promotion");
+        })
+        .catch((error) => {
+          console.error("Error occurred during request:", error);
+        });
     }
   };
 
@@ -250,10 +240,10 @@ const Order = () => {
                   type="number"
                   className="mt-4 mb-4"
                   id="mypoint"
-                  value={mypoint ?? ""}
-                  max={isDataLoaded ? data.price[0]["sum_point"] : ""}
+                  value={isDataLoaded ? mypoint : ""}
+                  max={isDataLoaded ? data.mypoint[0]["sum_point"] : ""}
                   min="0"
-                  onChange={(e) => setMyPoint(e.target.value)}
+                  onChange={handlePointChange}
                 />
               </td>
               <td>

@@ -78,7 +78,7 @@ function Promotionprice() {
                 ))}
               </tbody>
             </table>
-            <button className="btn btn-primary" type="button">
+            <button className="learn-more-btn btn-lg" type="button">
               <Link to={`/order?promotion_id=${data[0]?.promotion_id}`}>
                 구매 하러 가기
               </Link>
