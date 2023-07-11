@@ -18,6 +18,7 @@ function Promotion() {
   const fetchPromotions = async () => {
     try {
       const response = await axios.get("http://localhost:8080/promotion");
+      console.log(response.data);
       setPromotions(response.data);
     } catch (error) {
       console.log(error);

@@ -22,6 +22,7 @@ function Promotionprice() {
           `http://localhost:8080/promotionprice?promotion_id=${promotion_id}`
         );
         setData(response.data);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -47,8 +48,8 @@ function Promotionprice() {
             <h2 className="ticket-title">티켓 가격</h2>
             <table className="table table-striped">
               <tbody>
-                {data.map((d) => (
-                  <tr key={d.ticket_name}>
+                {data.map((d, index) => (
+                  <tr key={index}>
                     <td>{d.ticket_name}</td>
                     <td>
                       정상가 :{" "}
