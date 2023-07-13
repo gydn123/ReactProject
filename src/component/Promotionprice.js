@@ -8,6 +8,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
+const member_id = sessionStorage.getItem("MEMBER_ID");
 
 function Promotionprice() {
   const query = useQuery();
@@ -80,7 +81,9 @@ function Promotionprice() {
               </tbody>
             </table>
             <button className="learn-more-btn btn-lg" type="button">
-              <Link to={`/order?promotion_id=${data[0]?.promotion_id}`}>
+              <Link
+                to={`/order?promotion_id=${data[0]?.promotion_id}&member_id=${member_id}`}
+              >
                 구매 하러 가기
               </Link>
             </button>

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import "./order.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
+//import "bootstrap-icons/font/bootstrap-icons.css";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -13,7 +13,7 @@ const Order = () => {
   const navigate = useNavigate();
   const query = useQuery();
   const promotion_id = query.get("promotion_id");
-  const member_id = query.get("member_id");
+  const member_id = sessionStorage.getItem("MEMBER_ID");
   const [sum, setSum] = useState(0);
   const [mypoint, setMyPoint] = useState(0);
   const [data, setData] = useState({ price: [], mypoint: [] });
@@ -30,6 +30,17 @@ const Order = () => {
         `http://localhost:8080/order?promotion_id=${promotion_id}&member_id=${member_id}`
       );
       const data1 = response.data;
+
+      if (data1.mypoint.length === 0) {
+        data1.mypoint.push({
+          sum_point: 0,
+          m_point: null,
+          point_id: 0,
+          order_id: 0,
+          member_id: null,
+        });
+      }
+
       setMyPoint(data1.mypoint[0]["sum_point"]);
       setData(data1);
       setIsDataLoaded(true);
@@ -112,6 +123,7 @@ const Order = () => {
     if (window.confirm("구매 하시겠습니까?")) {
       const myArray = [];
       const usePoint = mypoint;
+      const member_id = sessionStorage.getItem("MEMBER_ID");
       const tableRows = document.querySelectorAll(".table-row");
       tableRows.forEach((row) => {
         const myMap = new Map();
@@ -131,11 +143,12 @@ const Order = () => {
 
       console.log(myJSON + "myJSON");
 
-      //여기에 ajax 요청 만들기
+      //여기에 axios 요청 만들기
       const url = "http://localhost:8080/order";
       const dataToSubmit = {
         myJSON: myJSON,
-        use_point: usePoint,
+        use_point: Number(usePoint).toFixed(2),
+        member_id: member_id,
       };
 
       axios
