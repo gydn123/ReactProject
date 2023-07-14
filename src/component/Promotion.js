@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import PromotionCard from "./PromotionCard";
 import axios from "axios";
 import "./Promotion.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import "jquery/dist/jquery.min.js";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function Promotion() {
   const [promotions, setPromotions] = useState([]);

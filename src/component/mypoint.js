@@ -42,145 +42,162 @@ function Mypoint() {
       <Row>
         <MyNavbar />
         <Col xs={9} className="my-5">
-          <div>
-            <main className="container custom-main-padding border-bottom mt-5">
-              <div className="row">
-                <article className="offset-1 col-8">
-                  <h2 className="mb-5">
-                    사용 가능한 포인트는{" "}
-                    {toKRWString(data.mypoint[0]?.sum_point ?? 0)} 포인트
-                    입니다.
-                  </h2>
-                  <hr />
-                  <h4 className="mb-3">포인트 적립 내역</h4>
-                  {data.orderlist.map((d, index) => (
-                    <div className="row" key={`${d.order_id}-${index}`}>
-                      {d.quantity !== 0 && (
-                        <>
-                          <div className="w-100"></div>
-                          <h4 className="mb-3">
-                            주문번호: {d.order_id}
-                            {d.checkorder ? (
-                              <button
-                                className="btn btn-success"
-                                onClick={() => refund(d.order_id)}
-                                disabled
-                              >
-                                구매 확정
-                              </button>
-                            ) : d.checkrefund ? (
-                              <button
-                                className="btn btn-danger"
-                                onClick={() => refund(d.order_id)}
-                                disabled
-                              >
-                                환불 완료
-                              </button>
-                            ) : (
-                              <button
-                                className="btn btn-danger"
-                                onClick={() => refund(d.order_id)}
-                                disabled
-                              >
-                                포인트 적립 미정
-                              </button>
-                            )}
-                          </h4>
-                          <div className="col-md-4 mb-5 ">
-                            <div className="card">
-                              <div className="card-body">
-                                <h5 className="card-title">
-                                  주문번호 : {d.order_id}
-                                </h5>
-                                <p className="card-text">{d.a_name}</p>
-                                <p className="card-text">{d.promotion_name}</p>
-                                <p className="card-text">{d.ticket_name}</p>
-                                <p className="card-subtitle mb-2 text-muted">
-                                  {toKRWString(
-                                    d.ticket_price * (1 - d.discount)
-                                  )}{" "}
-                                  * {d.quantity}
-                                </p>
-                                {/* 추가된 조건문 및 버튼 이벤트 처리 */}
-                                {d.checkorder && d.use_point !== null && (
-                                  <>
-                                    <p className="card-text">
-                                      결제금액 :{" "}
-                                      {toKRWString(
-                                        d.ticket_price *
-                                          (1 - d.discount) *
-                                          d.quantity -
-                                          d.use_point
-                                      )}
-                                    </p>
-                                    <p className="text-danger">
-                                      포인트 사용 : {toKRWString(d.use_point)}
-                                    </p>
-                                  </>
-                                )}
-                                {d.checkorder &&
-                                  (d.use_point === null ||
-                                    d.use_point === 0) && (
-                                    <p className="card-text">
-                                      결제금액 :{" "}
-                                      {toKRWString(
-                                        d.ticket_price *
-                                          (1 - d.discount) *
-                                          d.quantity
-                                      )}
-                                    </p>
-                                  )}
-                                {d.checkrefund && (
-                                  <del>
-                                    <p className="card-text">
-                                      결제금액 :{" "}
-                                      {toKRWString(
-                                        d.ticket_price *
-                                          (1 - d.discount) *
-                                          d.quantity
-                                      )}
-                                    </p>
-                                  </del>
-                                )}
-                                {d.checkorder && (
-                                  <p className="text-danger">
-                                    포인트 적립 :{" "}
+          <div className="container custom-main-padding border-bottom mt-5">
+            <h2 className="mb-5">
+              사용 가능한 포인트는 {data.mypoint[0]?.sum_point.toLocaleString()}{" "}
+              포인트 입니다.
+            </h2>
+            <hr />
+            <h4 className="mb-3">포인트 적립 내역</h4>
+            {Object.values(
+              data.orderlist.reduce((acc, d) => {
+                if (!acc[d.order_id]) {
+                  acc[d.order_id] = [];
+                }
+                acc[d.order_id].push(d);
+                return acc;
+              }, {})
+            )
+              .sort(
+                (a, b) => new Date(b[0].order_date) - new Date(a[0].order_date)
+              )
+              .map((orders, index) => (
+                <div className="row" key={`${orders[0].order_date}-${index}`}>
+                  {orders[0].quantity !== 0 && (
+                    <>
+                      <div className="w-100"></div>
+                      <h4 className="mb-3">
+                        주문번호: {orders[0].order_id}{" "}
+                        {orders[0].checkorder ? (
+                          <button
+                            className="btn btn-success"
+                            disabled={
+                              orders[0].checkorder || orders[0].checkrefund
+                            }
+                          >
+                            구매 확정 완료
+                          </button>
+                        ) : orders[0].checkrefund ? (
+                          <button
+                            className="btn btn-danger"
+                            disabled={
+                              orders[0].checkorder || orders[0].checkrefund
+                            }
+                          >
+                            환불 처리 완료
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-danger"
+                            disabled={
+                              !(orders[0].checkorder || orders[0].checkrefund)
+                            }
+                          >
+                            포인트 적립 미정
+                          </button>
+                        )}
+                      </h4>
+                      {orders.map((d, idx) => (
+                        <div
+                          className="col-md-4 mb-5 "
+                          key={`${orders[0].order_id}-${d.ticket_name}-${idx}`}
+                        >
+                          <div className="card">
+                            <div className="card-body">
+                              <h5 className="card-title">
+                                주문번호 : {d.order_id}
+                              </h5>
+                              <p className="card-text">{d.a_name}</p>
+                              <p className="card-text">{d.promotion_name}</p>
+                              <p className="card-text">{d.ticket_name}</p>
+                              <p className="card-subtitle mb-2 text-muted">
+                                {toKRWString(d.ticket_price * (1 - d.discount))}{" "}
+                                * {d.quantity}
+                              </p>
+                              <input
+                                id="myPointInput"
+                                className="MyPoint"
+                                type="hidden"
+                                value={
+                                  d["ticket_price"] *
+                                  (1 - d["discount"]) *
+                                  d["quantity"] *
+                                  0.05
+                                }
+                              />
+                              {d.checkorder && d.use_point !== null && (
+                                <>
+                                  <p className="card-text">
+                                    결제금액 :{" "}
                                     {toKRWString(
                                       d.ticket_price *
                                         (1 - d.discount) *
-                                        d.quantity *
-                                        0.05
+                                        d.quantity -
+                                        d.use_point
+                                    )}
+                                  </p>
+                                  <p className="text-danger">
+                                    포인트 사용 : {d.use_point}
+                                  </p>
+                                </>
+                              )}
+                              {d.checkorder &&
+                                (d.use_point === null || d.use_point === 0) && (
+                                  <p className="card-text">
+                                    결제금액 :{" "}
+                                    {toKRWString(
+                                      d.ticket_price *
+                                        (1 - d.discount) *
+                                        d.quantity
                                     )}
                                   </p>
                                 )}
-                                {d.checkrefund && (
-                                  <del>
-                                    <p className="text-danger">
-                                      포인트 적립 :{" "}
-                                      {toKRWString(
-                                        d.ticket_price *
-                                          (1 - d.discount) *
-                                          d.quantity *
-                                          0.05
-                                      )}
-                                    </p>
-                                  </del>
-                                )}
-                                <p className="card-text">
-                                  구매 날짜 : {d.order_date}
+                              {d.checkrefund && (
+                                <p
+                                  className="card-text"
+                                  style={{ textDecoration: "line-through" }}
+                                >
+                                  결제금액 :{" "}
+                                  {toKRWString(
+                                    d.ticket_price *
+                                      (1 - d.discount) *
+                                      d.quantity
+                                  )}
                                 </p>
-                              </div>
+                              )}
+                              {d.checkorder && (
+                                <p className="text-danger">
+                                  포인트 적립 :{" "}
+                                  {d.ticket_price *
+                                    (1 - d.discount) *
+                                    d.quantity *
+                                    0.05}
+                                </p>
+                              )}
+                              {d.checkrefund && (
+                                <p
+                                  className="text-danger"
+                                  style={{ textDecoration: "line-through" }}
+                                >
+                                  포인트 적립 :{" "}
+                                  {d.ticket_price *
+                                    (1 - d.discount) *
+                                    d.quantity *
+                                    0.05}
+                                </p>
+                              )}
+                              <p className="card-text">
+                                구매 날짜 : {d.order_date}
+                              </p>
                             </div>
                           </div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </article>
-              </div>
-            </main>
-            {/* footer.jsp 추가/분리된 컴포넌트로 이름 변경 필요 */}
-            {/*<Footer />*/}
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  <div></div>
+                </div>
+              ))}
           </div>
         </Col>
       </Row>

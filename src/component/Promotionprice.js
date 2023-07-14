@@ -80,9 +80,10 @@ function Promotionprice() {
                 ))}
               </tbody>
             </table>
-            <button className="learn-more-btn btn-lg" type="button">
+            <button className="learn-more-btn btn-lg text-white" type="button">
               <Link
                 to={`/order?promotion_id=${data[0]?.promotion_id}&member_id=${member_id}`}
+                style={{ textDecoration: "none" }}
               >
                 구매 하러 가기
               </Link>
