@@ -54,12 +54,12 @@ function Promotionprice() {
                     <td>{d.ticket_name}</td>
                     <td>
                       정상가 :{" "}
-                      <del>
+                      <span style={{ textDecoration: "line-through" }}>
                         {Intl.NumberFormat("ko-KR", {
                           style: "currency",
                           currency: "KRW",
                         }).format(d.ticket_price)}
-                      </del>
+                      </span>
                     </td>
                     <td>
                       할인가 :{" "}
@@ -80,7 +80,7 @@ function Promotionprice() {
                 ))}
               </tbody>
             </table>
-            <button className="learn-more-btn btn-lg text-white" type="button">
+            <button className="learn-more-btn" type="button">
               <Link
                 to={`/order?promotion_id=${data[0]?.promotion_id}&member_id=${member_id}`}
                 style={{ textDecoration: "none" }}

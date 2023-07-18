@@ -56,7 +56,7 @@ function Orderlist() {
         .post(url, confirmdata)
         .then((response) => {
           console.log(response.data);
-          alert("구매해 주셔서 감사합니다!");
+          alert("구매 확정 되었습니다!");
           window.location.reload();
         })
         .catch((error) => {

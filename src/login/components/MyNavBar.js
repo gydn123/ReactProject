@@ -31,14 +31,18 @@ const MyNavbar = () => {
   return (
     <Col xs={3} className="my-5">
       <Row className="rounded-0 shadow mb-5" style={{ height: "100px" }}>
-        <div id="divimage">
-          <i
+        <div
+          id="divimage"
+          className="text-center"
+          style={{ marginTop: "30px" }}
+        >
+          {/* <i
             className="bi bi-person-circle"
             id="iimage"
             style={{ fontSize: "2.5rem", color: "cornflowerblue" }}
           >
             &nbsp;
-          </i>
+          </i> */}
           <span style={{ fontWeight: "bold" }}>
             {kakao_name ? kakao_name : member_id}
           </span>
