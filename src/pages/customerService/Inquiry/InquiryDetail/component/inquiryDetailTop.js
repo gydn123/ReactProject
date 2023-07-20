@@ -1,11 +1,13 @@
+import styles from "../inquiryDetail.module.css";
+
 function InquiryDetailTop(viewData) {
   return (
     <>
-      <div className="header-inner">
+      <div className={styles.header_inner}>
         <p style={{ fontSize: "20px", float: "left" }}>
           <b>{viewData[0] && viewData[0].b_title}</b>
         </p>
-        <div className="heder-inner-inner" style={{ clear: "both" }}>
+        <div className={styles.heder_inner_inner} style={{ clear: "both" }}>
           <br />
           <span
             style={{

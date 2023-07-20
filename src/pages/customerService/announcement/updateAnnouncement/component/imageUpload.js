@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-
+import styles from "../uploadAnnouncement.module.css";
 function ImageUpload({
   member_id,
   setSelectedFiles,
@@ -31,8 +31,6 @@ function ImageUpload({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // 이미지 파일 업로드 로직 구현
     console.log(selectedFiles);
   };
 
@@ -77,24 +75,25 @@ function ImageUpload({
 
   return (
     <form onSubmit={handleSubmit}>
-      <div id="boardImgOrigin">
+      <div className={styles.boardImgOrigin} id="boardImgOrigin">
         <h2>본문 이미지</h2>
-        <div className="image_wrap">{renderOriginBoardImg()}</div>
-        <div className="imgs_file">
+        <div className={styles.image_wrap}>{renderOriginBoardImg()}</div>
+        <div className={styles.imgs_file}>
           <h2>
             <b>이미지 미리보기</b>
           </h2>
-          <div className="input_wrap">
+          <div className={styles.input_wrap}>
             <button
               type="button"
               onClick={() => document.getElementById("input_imgs").click()}
-              className="my_button"
+              className={styles.my_button}
             >
               파일 업로드
             </button>
             <input
               type="file"
               name="file"
+              className={styles.input_imgs}
               id="input_imgs"
               multiple="multiple"
               onChange={handleFileSelect}
@@ -106,12 +105,12 @@ function ImageUpload({
         </div>
 
         <div>
-          <div className="imgs_wrap">
+          <div className={styles.imgs_wrap}>
             {selectedFiles.map((file, index) => (
               <a onClick={() => handleDeleteFile(index)} key={index}>
                 <img
                   src={URL.createObjectURL(file)}
-                  className="selProductFile"
+                  className={styles.selProductFile}
                   title="Click to remove"
                 />
               </a>

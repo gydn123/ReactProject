@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AddReComment from "./addReComment";
 import UpdateComment from "./updateComment";
+import styles from "../detail.module.css";
 
 function CommentList(props) {
   const { viewData, comments } = props;
@@ -26,16 +27,13 @@ function CommentList(props) {
         console.log(response);
         setCommentList(response.data);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
     //'너는 뜨면안된다')
   };
 
   // 답글 열기 닫기
   const toggleReply = (index) => {
     const newReply = [...reply];
-
     if (openReplyIndex !== null && openReplyIndex !== index) {
       // 이전에 열렸던 답글창 닫기
       newReply[openReplyIndex] = false;
@@ -182,26 +180,24 @@ function CommentList(props) {
           },
         })
         .then(await getCommentList)
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => {});
     }
   };
 
   return (
-    <div id="commentform">
+    <div className={styles.commentform} id="commentform">
       <div style={{ fontWeight: "bold", fontSize: "12px" }}>
         <b>전체 댓글 </b> <span style={{ color: "red" }}>{viewData.cnt}</span>
         <b>개</b>
         <span
           id="commentHide"
-          className="comment-show"
+          className={styles.comment_show}
           style={{ float: "right" }}
         >
           댓글 접기
         </span>
       </div>
-      <table id="table">
+      <table className="boardDetailTable" id="table">
         <tbody>
           {commentList.map((comment, index) => (
             <React.Fragment key={comment.reply_num}>
@@ -222,11 +218,14 @@ function CommentList(props) {
                     )}
                     {renderPostDate(comment)}
                     {renderReplyBtn(index)}
-                    {renderButtons(comment, comment.reply_num)}
+                    {viewData.member_id ===
+                      sessionStorage.getItem("MEMBER_ID") &&
+                    sessionStorage.getItem("ADMIN") !== null
+                      ? renderButtons(comment, comment.reply_num)
+                      : ""}
                   </>
                 )}
               </tr>
-
               {/*대댓글추가*/}
               <tr style={{ background: "#eee", width: "1100px" }} colSpan={5}>
                 {comment.board_id !== "" && reply[index] && (

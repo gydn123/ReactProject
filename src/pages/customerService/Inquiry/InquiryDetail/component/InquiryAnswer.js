@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import styles from "../inquiryDetail.module.css";
 
 function InquiryAnswer({ inquiryNum, viewData }) {
   const [adminAnswer, setAdminAnswer] = useState("");
@@ -36,6 +37,7 @@ function InquiryAnswer({ inquiryNum, viewData }) {
       <textarea
         rows="10"
         name="b_content"
+        className={styles.adminAnswerContent}
         id="adminAnswerContent"
         style={{ width: "100%" }}
         onChange={changeAnswer}

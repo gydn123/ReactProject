@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
+import styles from "../addBoard.module.css";
 
 function SelectType(props) {
   const { typeSelect, inputRef } = props;
@@ -22,10 +23,10 @@ function SelectType(props) {
 
   return (
     <div>
-      <div className="create-window">
-        <div className="top-wrap">
+      <div className={styles.board_create_window}>
+        <div className={styles.top_wrap}>
           <select
-            className="form-select"
+            className={`form-select`}
             name="b_type"
             aria-label="Default select example"
             onChange={changeSelectValue}
@@ -39,15 +40,15 @@ function SelectType(props) {
           </select>
           <br />
         </div>
-        <div className="form-floating mb-3">
+        <div className={`form-floating mb-3`}>
           <input
             type="text"
-            className="form-control"
-            id="flootingInput"
+            className={`form-control `}
+            id="floatingInput"
             name="b_title"
             onChange={changeTitleValue}
           />
-          <label htmlFor="flootingInput">제목</label>
+          <label htmlFor="floatingInput">제목</label>
         </div>
       </div>
     </div>

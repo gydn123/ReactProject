@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PagingSearch from "./pagingSearch";
+import styles from "../inquiry.module.css";
 
 function InquiryList() {
   const [data, setData] = useState([]);
@@ -17,31 +18,48 @@ function InquiryList() {
       const addressParams = new URLSearchParams(location.search);
       const pageNum = addressParams.get("pageNum");
       const searchParams = addressParams.get("search");
-      let type = selectSearchType;
+
+      let searchType = selectSearchType;
       if (addressParams.get("type") !== null) {
-        type = addressParams.get("type");
+        searchType = addressParams.get("type");
       }
+
       pageNumber.current = pageNum;
-      setSelectSearchType(type);
+      setSelectSearchType(searchType);
       setSearchValue(searchParams);
-      getBoardList(pageNum, searchParams, type);
+      getBoardList(pageNum, searchParams, searchType);
     };
     fetchData();
   }, [location]);
 
+
+
+  const memberIdCheck = (member_id) => {
+
+    if (member_id === null) {
+      member_id = "검색거절데이터"
+      return member_id;
+    }
+
+    return member_id;
+  }
   const getBoardList = (pageNum, searchParams, type) => {
     let search = null;
+    const member_id = sessionStorage.getItem("MEMBER_ID");
+
+    memberIdCheck(member_id);
+
 
     if (pageNum === null) {
       pageNum = 1;
       pageNumber.current = pageNum;
     }
 
+
     if (searchParams !== null && searchParams !== undefined) {
       search = searchParams;
     }
 
-    console.log(pageNum);
     const requestOptions = {
       method: "GET",
       url: "http://localhost:8080/customer/inquiryList",
@@ -53,6 +71,7 @@ function InquiryList() {
         pageNum: pageNum,
         type: type,
         search: search,
+        member_id: member_id
       },
     };
 
@@ -60,12 +79,9 @@ function InquiryList() {
       try {
         const response = await axios(requestOptions);
         const data = response.data;
-        console.log(data);
         totalPages.current = data.totalPages;
         setData(data.content);
       } catch (error) {
-        console.log("http error");
-        console.log(error);
       }
     };
     getInquiryList();
@@ -96,10 +112,10 @@ function InquiryList() {
 
   return (
     <div>
-      <table className="board-table">
+      <table className={styles.board_table} style={{ maxWidth: 1300, textAlign: "center", marginLeft: 200 }}>
         <thead>
-          <tr>
-            <th scope="col" className="th-num" style={{ width: "5%" }}>
+          <tr style={{ borderTop: '1px solid #B0B0B0', borderBottom: '1px solid #E0E0E0' }}>
+            <th scope="col" className="th-num" style={{ width: "5%", padding: 15 }}>
               번호
             </th>
             <th scope="col" className="th-num" style={{ width: "10%" }}>
@@ -117,7 +133,7 @@ function InquiryList() {
           </tr>
         </thead>
 
-        <tbody id="boardList">
+        <tbody className={styles.boardList} id="boardList">
           {/* 합쳐진 데이터를 렌더링하는 부분 */}
           {/* 각 필드에 대한 데이터를 출력 */}
           {data.map(
@@ -126,7 +142,7 @@ function InquiryList() {
                 <tr key={index}>
                   <td>{item.inquiry_num}</td>
                   <td>{item.b_type}</td>
-                  <td>
+                  <td style={{ padding: 15 }}>
                     <Link to={`/inquiryDetail?inquiry_num=${item.inquiry_num}`}>
                       {item.b_title}
                     </Link>

@@ -15,6 +15,8 @@ const WriteList = (props) => {
   const [total, setTotal] = useState([]);
 
   const kakao_name = sessionStorage.getItem("KAKAO_NAME");
+  const git_id = sessionStorage.getItem("GIT_ID");
+  const member_id = sessionStorage.getItem("MEMBER_ID");
 
   // writeList/12 에서 12를 받아온다.
   const { id } = useParams();
@@ -24,8 +26,6 @@ const WriteList = (props) => {
   const queryParams = new URLSearchParams(location.search);
   const sort = queryParams.get("sort");
   console.log("sort :" + sort);
-
-  const member_id = sessionStorage.getItem("MEMBER_ID");
 
   useEffect(() => {
     call(
@@ -47,15 +47,15 @@ const WriteList = (props) => {
     });
   }, []);
 
-  function handleClickWritePlace(category) {
-    if (category === "문의게시판") {
-      window.location.href = "/inquiry";
+  function handleClickWritePlace(list) {
+    if (list.category === "문의게시판") {
+      window.location.href = "/inquiryDetail?inquiry_num=" + list.view_id;
     }
-    if (category === "게시판 댓글") {
-      window.location.href = "/boardReply";
+    if (list.category === "게시판 댓글") {
+      window.location.href = "/detail?board_id=" + list.view_id;
     }
-    if (category === "자유게시판") {
-      window.location.href = "/board";
+    if (list.category === "자유게시판") {
+      window.location.href = "/detail?board_id=" + list.view_id;
     }
   }
 
@@ -73,13 +73,13 @@ const WriteList = (props) => {
                   className="h2 text-center pt-2"
                   style={{ color: "white", fontWeight: "500" }}
                 >
-                  게시글/댓글 모음
+                  내 게시글/댓글
                 </div>
               </Col>
             </Row>
             <Row className="mb-2 mx-1">
               <div style={{ fontSize: "14px" }}>
-                {kakao_name ? kakao_name : pageMaker.cri?.member_id}
+                {kakao_name || git_id || pageMaker.cri?.member_id}
                 님의 게시글 모음
               </div>
             </Row>
@@ -111,7 +111,9 @@ const WriteList = (props) => {
                   </Row>
                   <Row className="mb-3">
                     <Col style={{ fontSize: "13px" }} sm={9}>
-                      {list.b_content}
+                      <div
+                        dangerouslySetInnerHTML={{ __html: list.b_content }}
+                      ></div>
                     </Col>
                     <Col></Col>
                   </Row>
@@ -125,7 +127,7 @@ const WriteList = (props) => {
                         value="작성한곳으로 이동"
                         style={{ height: "30px", fontSize: "14px" }}
                         type="button"
-                        onClick={() => handleClickWritePlace(list.category)}
+                        onClick={() => handleClickWritePlace(list)}
                       />
                     </Col>
                   </Row>

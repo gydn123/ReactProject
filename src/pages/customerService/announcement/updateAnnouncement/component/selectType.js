@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import styles from "../uploadAnnouncement.module.css";
 function SelectType(props) {
   const { setTitleValue, b_title } = props;
 
   // useEffect(() => {
   //     console.log(titleValue.)
   // }, [titleValue]);
-  useEffect(() => {}, []);
-
   const changeTitleValue = (titleEvent) => {
     const newTitle = titleEvent.target.value;
     //titleInputRef.current = TitleValue; // 삭제

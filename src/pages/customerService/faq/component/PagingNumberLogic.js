@@ -1,14 +1,11 @@
-function PagingNumberLogic({ pageNumber, totalPages }) {
+function PagingNumberLogic({ pageNumber, totalPages, f_type, setCurrentPage }) {
   // 페이지 번호를 10 단위로 설정합니다.
-  console.log(pageNumber);
-  console.log(totalPages);
-  console.log(totalPages.current);
-  let startPage = Math.floor((pageNumber.current - 1) / 10) * 10 + 1;
+  let startPage = Math.floor((pageNumber - 1) / 10) * 10 + 1;
   let endPage = startPage + 9;
 
   // 전체 페이지와 비교하여 endPage 값 설정
-  if (endPage > totalPages.current) {
-    endPage = totalPages.current;
+  if (endPage > totalPages) {
+    endPage = totalPages;
   }
 
   // pageNumber 담을 공간
@@ -18,19 +15,17 @@ function PagingNumberLogic({ pageNumber, totalPages }) {
     pageNumbers[arrNum] = i;
     arrNum++;
   }
-  console.log(startPage);
   // 페이지 이동시 처리할 로직
   const handlePageClick = (clickedPageNum) => {
-    let pageNum = clickedPageNum;
-    //if(pageNum === integer)
-    window.location.href = `/faq?pageNum=${pageNum}`;
+    window.location.href = `/faq?pageNum=${clickedPageNum}&ftype=${f_type}`
+    setCurrentPage(clickedPageNum);
   };
 
   const prevPaging = () => {
     return (
       <>
         <a
-          href="#"
+          href="/faq?pageNum=1"
           onClick={(e) => {
             e.preventDefault();
             handlePageClick(1);
@@ -82,7 +77,7 @@ function PagingNumberLogic({ pageNumber, totalPages }) {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              handlePageClick(totalPages.current);
+              handlePageClick(totalPages);
             }}
           >
             End

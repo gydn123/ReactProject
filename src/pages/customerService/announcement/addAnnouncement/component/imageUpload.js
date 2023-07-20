@@ -24,7 +24,6 @@ function ImageUpload({ member_id, setSelectedFiles, selectedFiles }) {
     e.preventDefault();
 
     // 이미지 파일 업로드 로직 구현
-    console.log(selectedFiles);
   };
 
   return (

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRef, useState } from "react";
 import { emojiList } from "./emojis";
+import styles from "../detail.module.css";
 
 function UpdateComment(props) {
   const { index, openUpdate, commentData, getCommentList } = props;
@@ -8,11 +9,7 @@ function UpdateComment(props) {
   const [comment, setComment] = useState(commentData?.b_reply || "");
 
   const updateComment = async () => {
-    console.log(commentData);
-    console.log(comment);
-    console.log(getCommentList);
     const reply = textAreaRef.current.value;
-    console.log(reply);
 
     await axios
       .put("http://localhost:8080/board/replyUpdate", {
@@ -25,9 +22,7 @@ function UpdateComment(props) {
         getCommentList();
         openUpdate(index);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
 
   const emo = (event, emoji) => {
@@ -57,11 +52,11 @@ function UpdateComment(props) {
 
   return (
     <>
-      <td style={{ width: "20%", textAlign: "center" }}>hong1</td>
+      <td style={{ width: "20%", textAlign: "center" }}>{"hong1"}</td>
       <td style={{ width: "40%" }} colSpan={4}>
         <textarea
           ref={textAreaRef}
-          className="re_comment"
+          className={styles.re_comment}
           id="re_comment"
           value={comment}
           onChange={limitComment}
@@ -75,7 +70,7 @@ function UpdateComment(props) {
           }}
           rows={4}
         ></textarea>
-        <div id="emoticons">
+        <div className={styles.emoticons} id={styles.emoticons}>
           이모티콘:
           {emojiList.map((emojiData, index) => (
             <img
@@ -86,20 +81,22 @@ function UpdateComment(props) {
               title={emojiData.title}
             />
           ))}
-          <div id="comment_cnt">({comment.length} / 200)</div>
+          <div className={styles.comment_cnt} id={styles.comment_cnt}>
+            ({comment.length} / 200)
+          </div>
         </div>
 
         <div style={{ float: "right", width: "40%" }}>
           <button
-            className="btn btn-white"
-            id="reComment_create"
+            className={["btn", "btn-white"].join(" ")}
+            id={styles.reComment_create}
             onClick={updateComment}
           >
             댓글달기
           </button>
           <button
-            className="btn btn-white"
-            id="comment_update_cancle"
+            className={["btn", "btn-white"].join(" ")}
+            id={styles.comment_update_cancle}
             onClick={() => openUpdate(index)}
           >
             취소

@@ -1,16 +1,15 @@
+import styles from "../announcement.module.css";
 function AnnouncementSearch({ searchData, setSearchData, setSearchCheck }) {
   const changeSearchData = (e) => {
     let searchValue = e.target.value;
-    console.log(searchValue);
     setSearchData(searchValue);
   };
 
   const searchCheckBtn = (e, check) => {
-    console.log(e.target.value);
     if (check === 1) {
       let searchValue = e.target.value;
-      window.location.href = `/announcement?pageNum=1&search=${searchValue}`;
       setSearchCheck(1);
+      window.location.href = `/announcement?pageNum=1&search=${searchValue}`;
     } else {
       setSearchCheck(1);
       let searchValue = e.target.previousElementSibling.value;
@@ -20,15 +19,21 @@ function AnnouncementSearch({ searchData, setSearchData, setSearchCheck }) {
 
   return (
     <>
-      <select name="select" id="search_select" style={{ display: "none" }}>
+      <select
+        name="select"
+        className={styles.search_select}
+        id="search_select"
+        style={{ display: "none" }}
+      >
         <option value="c_title">제목</option>
       </select>
 
-      <label htmlFor="search" className="blind">
+      <label htmlFor="search" className={styles.blind}>
         공지사항 내용 검색
       </label>
       <input
-        id="text"
+        id="search"
+        className={styles.text}
         type="search"
         name="search"
         value={searchData != null ? searchData : ""}
@@ -41,9 +46,14 @@ function AnnouncementSearch({ searchData, setSearchData, setSearchCheck }) {
       ></input>
       <button
         type="button"
-        className="btn btn-search"
+        className={[styles.btn, styles.btnSearch].join(" ")}
         onClick={(event) => {
           searchCheckBtn(event, 2);
+        }}
+        style={{
+          backgroundColor: "#555555",
+          color: "#fff",
+          border_radius: 15,
         }}
       >
         검색

@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Tabs = ({ changeF_type, f_type, faqs }) => {
   const [currentTab, setCurrentTab] = useState(0);
 
+
+  useEffect(() => {
+    currentPageInit();
+  }, []);
+
   const liStyle = {
-    borderWidth: "1px 1px 0 1px",
+    borderWidth: "1px 1px 1px 1px",
     borderStyle: "solid",
     background: "#ededed",
     borderColor: "#999999",
@@ -24,20 +29,30 @@ const Tabs = ({ changeF_type, f_type, faqs }) => {
     setCurrentTab(index);
   };
 
+  const currentPageInit = () => {
+    if (f_type === "전체") { setCurrentTab(0); }
+    if (f_type === "이용정보") { setCurrentTab(1); }
+    if (f_type === "우대정보/이벤트") { setCurrentTab(2); }
+    if (f_type === "예매") { setCurrentTab(3); }
+    if (f_type === "기타") { setCurrentTab(4); }
+  };
+
   return (
     <div style={{ clear: "both" }}>
       <div style={{ margin: "30px 0" }}>
         <h1>자주 묻는 질문</h1>
       </div>
       <div className="fatTab_wrap">
-        <div className="faqTab">
-          <ul className="faqTabs">
+        <div className="faqTab" style={{ marginLeft: 450 }}>
+          <ul
+            className="faqTabs"
+            style={{ textAlign: "center", arginLeft: 50, marginBottom: 50 }}
+          >
             {faqs &&
               tabsData.map((e, index) => (
                 <li
-                  className={`tab-link${
-                    index === currentTab ? " current" : ""
-                  }`}
+                  className={`tab-link${index === currentTab ? " current" : ""
+                    }`}
                   id={e.id}
                   style={index === currentTab ? liStyle : {}}
                   onClick={() => {
@@ -46,60 +61,11 @@ const Tabs = ({ changeF_type, f_type, faqs }) => {
                   }}
                   key={index}
                 >
-                  <div style={{ width: "100%", height: "100%" }}>{e.type}</div>
+                  <div style={{ width: "100%", height: "100%", right: 20 }}>
+                    {e.type}
+                  </div>
                 </li>
               ))}
-            {/* {faqs && faqs.map((e, index) => (
-              <li
-                className={`tab-link${e.f_type === null ? " current" : ""}`}
-                id={`li-${index}`}
-                style={e.f_type === 'current' ? liStyle : {}}
-                onClick={() => changeF_type(e.f_type)}
-                key={index}
-              >
-              </li>
-            ))} */}
-
-            {/* <li
-              className={`tab-link${f_type === null ? " current" : ""}`}
-              id="li-0"
-              style={f_type === null ? liStyle : {}}
-              onClick={() => changeF_type(null)}
-            >
-              <div style={{ width: "100%", height: "100%" }}>전체</div>
-            </li>
-            <li
-              className={`tab-link${f_type === 1 ? " current" : ""}`}
-              id="li-1"
-              style={f_type === 1 ? liStyle : {}}
-              onClick={() => changeF_type(1)}
-            >
-              <div style={{ width: "100%", height: "100%" }}>이용정보</div>
-            </li>
-            <li
-              className={`tab-link${f_type === 2 ? " current" : ""}`}
-              id="li-2"
-              style={f_type === 2 ? liStyle : {}}
-              onClick={() => changeF_type(2)}
-            >
-              <div style={{ width: "100%", height: "100%" }}>우대정보/이벤트</div>
-            </li>
-            <li
-              className={`tab-link${f_type === 3 ? " current" : ""}`}
-              id="li-3"
-              style={f_type === 3 ? liStyle : {}}
-              onClick={() => changeF_type(3)}
-            >
-              <div style={{ width: "100%", height: "100%" }}>예매</div>
-            </li>
-            <li
-              className={`tab-link${f_type === 4 ? " current" : ""}`}
-              id="li-4"
-              style={f_type === 4 ? liStyle : {}}
-              onClick={() => changeF_type(4)}
-            >
-              <div style={{ width: "100%", height: "100%" }}>기타</div>
-            </li> */}
           </ul>
         </div>
       </div>

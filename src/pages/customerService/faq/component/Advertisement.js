@@ -3,7 +3,7 @@ import "./Advertisement.css"; // 경로에 맞게 변경하세요.
 
 const Advertisement = () => {
   return (
-    <div className="aside-wrap">
+    <div className="aside-wrap" style={{ marginTop: 350 }}>
       <div className="aside-inner bottom-right top-left">
         <a href="http://jg.tjoeunit.co.kr/">
           <img

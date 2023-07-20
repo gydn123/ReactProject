@@ -1,9 +1,9 @@
 import React from "react";
-
+import styles from "../inquiryDetail.module.css";
 function InquiryContent({ viewData }) {
   return (
     <>
-      <div className="content-inner">
+      <div className={styles.content_inner}>
         {viewData &&
           viewData.map((data, index) => (
             <React.Fragment key={index}>

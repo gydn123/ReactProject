@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PagingSearch from "./pagingSearch";
+import styles from "../announcement.module.css";
 
 function AnnouncementList() {
   const [data, setData] = useState([]);
@@ -83,25 +84,29 @@ function AnnouncementList() {
 
   return (
     <div>
-      <table className="board-table">
+      <table className={styles.anno_table}>
         <thead>
           <tr>
-            <th scope="col" className="th-num" style={{ width: "5%" }}>
+            <th scope="col" className={styles.th_num} style={{ width: "5%" }}>
               번호
             </th>
-            <th scope="col" className="th-num" style={{ width: "15%" }}>
+            <th scope="col" className={styles.th_num} style={{ width: "15%" }}>
               분류
             </th>
-            <th scope="col" className="th-title" style={{ width: "25%" }}>
+            <th
+              scope="col"
+              className={styles.th_title}
+              style={{ width: "25%" }}
+            >
               제목
             </th>
-            <th scope="col" className="th-date" style={{ width: "30%" }}>
+            <th scope="col" className={styles.th_date} style={{ width: "30%" }}>
               등록일
             </th>
           </tr>
         </thead>
 
-        <tbody id="boardList">
+        <tbody className={styles.anno_boardList}>
           {/* 합쳐진 데이터를 렌더링하는 부분 */}
           {/* 각 필드에 대한 데이터를 출력 */}
           {data.map(

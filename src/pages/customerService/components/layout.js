@@ -1,16 +1,16 @@
-import { Outlet } from "react-router-dom";
+import { Outlet } from 'react-router-dom';
 
-import CustomerMove from "../customerMove.js";
+import CustomerMove from '../customerMove.js';
 
 const Layout = () => {
-  return (
-    <div>
-      <CustomerMove />
-      <main>
-        <Outlet />
-      </main>
-    </div>
-  );
+    return (
+        <div>
+            <CustomerMove />
+            <main>
+                <Outlet />
+            </main>
+        </div>
+    );
 };
 
 export default Layout;

@@ -1,17 +1,11 @@
-import React, { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React from "react";
 
 function SelectType(props) {
   const { inputRef } = props;
-  //const { titleValue, setTitleValue } = props;
-
-  // useEffect(() => {
-  //     console.log(titleValue.)
-  // }, [titleValue]);
 
   const changeTitleValue = (titleEvent) => {
     inputRef.current = titleEvent.target.value;
-    console.log(inputRef.current);
   };
 
   return (

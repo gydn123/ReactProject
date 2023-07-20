@@ -3,7 +3,7 @@ let backendHost;
 // window가 존재하고, window.location이 존재하면 window.location.hostname의 값을 전달한다.
 const hostname = window && window.location && window.location.hostname;
 
-if (hostname == "localhost") {
+if (hostname === "localhost") {
   backendHost = "http://localhost:8080";
 }
 

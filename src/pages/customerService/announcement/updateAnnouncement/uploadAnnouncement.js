@@ -1,3 +1,4 @@
+import styles from "./uploadAnnouncement.module.css";
 import "./uploadAnnouncement.css";
 import { Container } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
@@ -22,10 +23,23 @@ function UploadAnnouncement() {
   const urlSearch = new URLSearchParams(location.search);
 
   useEffect(() => {
+    function loginMemberCheck(detailData) {
+      const loginMember = sessionStorage.getItem("member_id");
+      const adminCheck = sessionStorage.getItem("ADMIN");
+      const boardMemberId = detailData.member_id;
+      if (loginMember !== boardMemberId) {
+        return;
+      }
+      if (adminCheck !== null) {
+        return;
+      }
+      window.alert("권한이 없습니다");
+      window.location.href = "/board";
+    }
+
     async function ready() {
       const detailData = await getDetailInfo();
-
-      console.log(detailData);
+      loginMemberCheck(detailData);
       setTitle(detailData.c_title);
       setContent(detailData.c_content);
       setOriginBoardImg(detailData.boardImg);
@@ -126,18 +140,19 @@ function UploadAnnouncement() {
 
   return (
     <>
-      <section className="notice">
-        <div className="create-board" style={{ marginLeft: 200 }}>
+      <section className={styles.notice} style={{ marginTop: 100 }}>
+        <div className={styles.create_board}>
           <Container>
             <SelectType b_title={title} setTitleValue={setTitle} />
             <hr />
-            <Ckeditor
-              ckeditorData={ckeditorData}
-              //onImageUpload={handleImageUpload}
-              setContent={setContent}
-              content={content}
-            />
-
+            <div style={{ textAlign: "center" }}>
+              <Ckeditor
+                ckeditorData={ckeditorData}
+                setContent={setContent}
+                content={content}
+              />
+            </div>
+            <br></br>
             <div style={{ textAlign: "left" }}>
               <ImageUpload
                 selectedFiles={selectedFiles}
@@ -151,17 +166,17 @@ function UploadAnnouncement() {
 
             <br />
 
-            <div id="insert-btn-wrap">
+            <div className={styles.insert_btn_wrap} id="insert-btn-wrap">
               <input
                 type="button"
                 id="cancle-btn"
-                className="btn btn-blue"
+                className={[styles.btn, styles.btn_blue].join(" ")}
                 onClick={cancle}
                 value="취소"
               />
               <input
                 type="submit"
-                className="btn btn-blue"
+                className={[styles.btn, styles.btn_blue].join(" ")}
                 id="submit"
                 onClick={fetchData}
                 value="확인"

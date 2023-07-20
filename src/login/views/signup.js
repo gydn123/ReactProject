@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-// import "../css/signup.css";
+import "../css/signup.css";
 
 import { useDaumPostcodePopup } from "react-daum-postcode";
 import Container from "react-bootstrap/Container";
@@ -14,7 +14,9 @@ const SignUp = () => {
   const formRef = useRef(null);
 
   // kakao_id값 hidden 에 저장(kakao_id가 없으면 false로 저장)
+  // git_id값 hidden 에 저장(git_id가 없으면 false로 저장)
   const [kakaoId, setKakaoId] = useState("false");
+  const [gitId, setGitId] = useState("false");
 
   useEffect(() => {
     if (sessionStorage.getItem("KAKAO_ID") !== null) {
@@ -22,31 +24,46 @@ const SignUp = () => {
 
       console.log("signUp/kakao_id : " + kakaoId);
     }
+
+    if (sessionStorage.getItem("GIT_ID") !== null) {
+      setGitId(sessionStorage.getItem("GIT_ID"));
+
+      console.log("signUp/git_id : " + gitId);
+    }
+
     const currentParams = new URLSearchParams(window.location.search);
     if (currentParams.get("kakaoId")) {
       setKakaoId(currentParams.get("kakaoId"));
+    }
+
+    const currentParams2 = new URLSearchParams(window.location.search);
+    if (currentParams2.get("gid_id")) {
+      setGitId(currentParams2.get("gid_id"));
     }
   }, []);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [correctMessage, setCorrectMessage] = useState("");
 
-  // const [memberIdMessage, setMemberIdMessage] = useState("");
-  // const [passMessage, setPassMessage] = useState("");
-  // const [pass2Message, setPass2Message] = useState("");
-  // const [nameMessage, setNameMessage] = useState("");
-  // const [email1Message, setEmail1Message] = useState("");
-  // const [email2Message, setEmail2Message] = useState("");
-  // const [phoneMessage, setPhoneMessage] = useState("");
-  // const [addressMessage, setAddressMessage] = useState("");
-  // const [yearMessage, setYearMessage] = useState("");
-  // const [monthMessage, setMonthMessage] = useState("");
-  // const [dayMessage, setDayMessage] = useState("");
-
   const [errorName, setErrorName] = useState("");
   const [formValue, setFormValue] = useState("");
   const [enableSubmit, setEnableSubmit] = useState("");
   const [passValue, setPassValue] = useState("");
+
+  // 카카오,git 로그인시 랜덤 비밀번호 생성
+  const [randomPass, setRandomPass] = useState("");
+  useEffect(() => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    let result = "";
+    for (let i = 0; i < 10; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    setRandomPass(result);
+  }, []);
+  // 랜덤 비밀번호 끝
 
   function handleBlur(e) {
     const { name, value } = e.target;
@@ -146,9 +163,14 @@ const SignUp = () => {
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
-    console.log(formRef.current.querySelector("#m_address").value);
-    formRef.current.querySelector("#m_address").value = fullAddress;
+    console.log("zoncode : " + data.zonecode);
+    console.log("bname : " + data.bname);
+    console.log("buildingName : " + data.buildingName);
+    console.log("extraAddress : " + extraAddress);
+    console.log("fullAddress : " + fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    console.log(formRef.current.querySelector("#m_address2").value);
+    formRef.current.querySelector("#m_address2").value = fullAddress;
+    formRef.current.querySelector("#m_address1").value = data.zonecode;
   };
 
   function handleClickJuso() {
@@ -162,6 +184,8 @@ const SignUp = () => {
     // kakaoID 로그
     const kakao_id = formRef.current.querySelector("#hidden").value;
     console.log(kakao_id);
+    const git_id = formRef.current.querySelector("#hidden2").value;
+    console.log(git_id);
     const member_id = formRef.current.querySelector("#member_id").value;
 
     const m_pass = formRef.current.querySelector("#m_pass").value;
@@ -173,9 +197,17 @@ const SignUp = () => {
     const month = formRef.current.querySelector("#month").value;
     const day = formRef.current.querySelector("#day").value;
 
-    const m_phone = formRef.current.querySelector("#m_phone").value;
+    const m_phone1 = formRef.current.querySelector("#m_phone1").value;
+    const m_phone2 = formRef.current.querySelector("#m_phone2").value;
+    const m_phone3 = formRef.current.querySelector("#m_phone3").value;
 
-    const m_address = formRef.current.querySelector("#m_address").value;
+    const m_phone = m_phone1 + m_phone2 + m_phone3;
+
+    const m_address1 = formRef.current.querySelector("#m_address1").value;
+    const m_address2 = formRef.current.querySelector("#m_address2").value;
+    const m_address3 = formRef.current.querySelector("#m_address3").value;
+
+    const m_address = m_address1 + "/" + m_address2 + " " + m_address3;
 
     const email1 = formRef.current.querySelector("#email1").value;
     const email2 = formRef.current.querySelector("#email2").value;
@@ -244,7 +276,17 @@ const SignUp = () => {
       setErrorMessage("주소를 입력해주세요.");
       return;
     }
-    if (m_phone === null || m_phone === "") {
+    if (m_phone1 === null || m_phone1 === "") {
+      setErrorName(formRef.current.querySelector("#m_phone").name);
+      setErrorMessage("전화번호를 입력해주세요.");
+      return;
+    }
+    if (m_phone2 === null || m_phone2 === "") {
+      setErrorName(formRef.current.querySelector("#m_phone").name);
+      setErrorMessage("전화번호를 입력해주세요.");
+      return;
+    }
+    if (m_phone3 === null || m_phone3 === "") {
       setErrorName(formRef.current.querySelector("#m_phone").name);
       setErrorMessage("전화번호를 입력해주세요.");
       return;
@@ -260,6 +302,7 @@ const SignUp = () => {
       m_address: m_address,
       m_gender: m_gender,
       m_kakao_id: kakao_id,
+      m_github_id: git_id,
     };
 
     console.log(param);
@@ -267,7 +310,7 @@ const SignUp = () => {
     if (enableSubmit === "true") {
       call("/login/signup", "POST", param).then((response) => {
         console.log("응답받음");
-        window.location.href = "/login";
+        window.location.href = "/signUpComplete";
       });
     }
   }
@@ -284,14 +327,27 @@ const SignUp = () => {
             />
           </Row>
           {kakaoId === "false" ? (
-            ""
+            gitId === "false" ? (
+              ""
+            ) : (
+              <Row
+                className="p-4 mx-2 border-1 border border-success text-center"
+                style={{ marginTop: "20px", marginBottom: "30px" }}
+              >
+                <div style={{ fontWeight: "bold" }}>
+                  첫 1회 로그인시에는 EXCITINGAMUSEMENT의 컨텐츠를 이용하기 위한
+                  정보입력이 필요합니다.
+                </div>
+              </Row>
+            )
           ) : (
             <Row
               className="p-4 mx-2 border-1 border border-success text-center"
               style={{ marginTop: "20px", marginBottom: "30px" }}
             >
               <div style={{ fontWeight: "bold" }}>
-                첫 1회 로그인시에는 회원가입이 필요합니다.
+                첫 1회 로그인시에는 EXCITINGAMUSEMENT의 컨텐츠를 이용하기 위한
+                정보입력이 필요합니다.
               </div>
             </Row>
           )}
@@ -301,31 +357,42 @@ const SignUp = () => {
           <form ref={formRef}>
             {/* kakaoid 존재여부 저장 */}
             <input type="hidden" id="hidden" name="hidden" value={kakaoId} />
+            {/* gitid 존재여부 저장 */}
+            <input type="hidden" id="hidden2" name="hidden2" value={gitId} />
             {/* 아이디 */}
             {kakaoId === "false" ? (
-              <div className="mb-4">
-                <Row className="mb-2">
-                  <div className="signup-text">아이디</div>
-                </Row>
-                <Row className="px-2">
-                  <div className="signup-input">
-                    <input
-                      id="member_id"
-                      type="text"
-                      name="member_id"
-                      className="border-0"
-                      style={{ outline: "none", width: "100%" }}
-                      onBlur={handleBlur}
-                    ></input>
-                  </div>
-                </Row>
-                {errorName === "member_id" ? (
-                  <ErrorMessage errorMessage={errorMessage} />
-                ) : null}
-                {errorName === "member_id" ? (
-                  <CorrectMessage correctMessage={correctMessage} />
-                ) : null}
-              </div>
+              gitId === "false" ? (
+                <div className="mb-4">
+                  <Row className="mb-2">
+                    <div className="signup-text">아이디</div>
+                  </Row>
+                  <Row className="px-2">
+                    <div className="signup-input">
+                      <input
+                        id="member_id"
+                        type="text"
+                        name="member_id"
+                        className="border-0"
+                        style={{ outline: "none", width: "100%" }}
+                        onBlur={handleBlur}
+                      ></input>
+                    </div>
+                  </Row>
+                  {errorName === "member_id" ? (
+                    <ErrorMessage errorMessage={errorMessage} />
+                  ) : null}
+                  {errorName === "member_id" ? (
+                    <CorrectMessage correctMessage={correctMessage} />
+                  ) : null}
+                </div>
+              ) : (
+                <input
+                  type="hidden"
+                  id="member_id"
+                  name="member_id"
+                  value={`gg_${gitId}`}
+                />
+              )
             ) : (
               <input
                 type="hidden"
@@ -336,54 +403,90 @@ const SignUp = () => {
             )}
 
             {/* 비밀번호 */}
-            <div className="mb-4">
-              <Row className="mb-2">
-                <div className="signup-text">비밀번호</div>
-              </Row>
-              <Row className="px-2">
-                <div className="signup-input">
-                  <input
-                    id="m_pass"
-                    type="password"
-                    name="m_pass"
-                    className="border-0"
-                    style={{ outline: "none", width: "100%" }}
-                    onBlur={handleBlur}
-                  ></input>
+            {kakaoId === "false" ? (
+              gitId === "false" ? (
+                <div className="mb-4">
+                  <Row className="mb-2">
+                    <div className="signup-text">비밀번호</div>
+                  </Row>
+                  <Row className="px-2">
+                    <div className="signup-input">
+                      <input
+                        id="m_pass"
+                        type="password"
+                        name="m_pass"
+                        className="border-0"
+                        style={{ outline: "none", width: "100%" }}
+                        onBlur={handleBlur}
+                      ></input>
+                    </div>
+                  </Row>
+                  {errorName === "m_pass" ? (
+                    <ErrorMessage errorMessage={errorMessage} />
+                  ) : null}
+                  {errorName === "m_pass" ? (
+                    <CorrectMessage correctMessage={correctMessage} />
+                  ) : null}{" "}
                 </div>
-              </Row>
-              {errorName === "m_pass" ? (
-                <ErrorMessage errorMessage={errorMessage} />
-              ) : null}
-              {errorName === "m_pass" ? (
-                <CorrectMessage correctMessage={correctMessage} />
-              ) : null}{" "}
-            </div>
+              ) : (
+                <input
+                  type="hidden"
+                  id="m_pass"
+                  name="m_pass"
+                  value={randomPass}
+                />
+              )
+            ) : (
+              <input
+                type="hidden"
+                id="m_pass"
+                name="m_pass"
+                value={randomPass}
+              />
+            )}
 
             {/* 비밀번호 확인 */}
-            <div className="mb-4">
-              <Row className="mb-2">
-                <div className="signup-text">비밀번호 확인</div>
-              </Row>
-              <Row className="px-2">
-                <div className="signup-input">
-                  <input
-                    id="m_pass2"
-                    type="password"
-                    name="m_pass2"
-                    className="border-0"
-                    style={{ outline: "none", width: "100%" }}
-                    onBlur={handleBlur}
-                  ></input>
+            {kakaoId === "false" ? (
+              gitId === "false" ? (
+                <div className="mb-4">
+                  <Row className="mb-2">
+                    <div className="signup-text">비밀번호 확인</div>
+                  </Row>
+                  <Row className="px-2">
+                    <div className="signup-input">
+                      <input
+                        id="m_pass2"
+                        type="password"
+                        name="m_pass2"
+                        className="border-0"
+                        style={{ outline: "none", width: "100%" }}
+                        onBlur={handleBlur}
+                      ></input>
+                    </div>
+                  </Row>
+                  {errorName === "m_pass2" ? (
+                    <ErrorMessage errorMessage={errorMessage} />
+                  ) : null}
+                  {errorName === "m_pass2" ? (
+                    <CorrectMessage correctMessage={correctMessage} />
+                  ) : null}{" "}
                 </div>
-              </Row>
-              {errorName === "m_pass2" ? (
-                <ErrorMessage errorMessage={errorMessage} />
-              ) : null}
-              {errorName === "m_pass2" ? (
-                <CorrectMessage correctMessage={correctMessage} />
-              ) : null}{" "}
-            </div>
+              ) : (
+                <input
+                  type="hidden"
+                  id="m_pass2"
+                  name="m_pass2"
+                  value={randomPass}
+                />
+              )
+            ) : (
+              <input
+                type="hidden"
+                id="m_pass2"
+                name="m_pass2"
+                value={randomPass}
+              />
+            )}
 
             {/* 이름 */}
             <div className="mb-4">
@@ -464,8 +567,8 @@ const SignUp = () => {
                 </Col>
               </Row>
               {errorName === "year" ||
-              errorName === "month" ||
-              errorName === "day" ? (
+                errorName === "month" ||
+                errorName === "day" ? (
                 <ErrorMessage errorMessage={errorMessage} />
               ) : null}
             </div>
@@ -539,7 +642,7 @@ const SignUp = () => {
                       <option value="">직접입력</option>
                       <option value="naver.com">naver.com</option>
                       <option value="daum.net">daum.net</option>
-                      <option value="google.com">google.com</option>
+                      <option value="gmail.com">gmail.com</option>
                     </select>
                   </div>
                 </Col>
@@ -555,20 +658,21 @@ const SignUp = () => {
                 <div className="signup-text">주소</div>
               </Row>
               <Row className="px-2">
-                <Col sm={9} className="px-0">
+                <Col sm={3} className="px-0">
                   <div className="signup-input">
                     <input
-                      id="m_address"
+                      id="m_address1"
                       type="text"
-                      name="m_address"
+                      name="m_address1"
                       className="border-0"
                       style={{ outline: "none", width: "100%" }}
-                      placeholder="주소 입력"
+                      placeholder="우편번호"
                       onBlur={handleBlur}
                       readOnly
                     ></input>
                   </div>
                 </Col>
+
                 <Col sm={3}>
                   <div>
                     <input
@@ -579,6 +683,37 @@ const SignUp = () => {
                       style={{ width: "100%", height: "40px" }}
                       onClick={handleClickJuso}
                     />
+                  </div>
+                </Col>
+              </Row>
+              <Row className="px-2">
+                <Col sm={12} className="px-0 mt-2">
+                  <div className="signup-input">
+                    <input
+                      id="m_address2"
+                      type="text"
+                      name="m_address2"
+                      className="border-0"
+                      style={{ outline: "none", width: "100%" }}
+                      placeholder="주소"
+                      onBlur={handleBlur}
+                      readOnly
+                    ></input>
+                  </div>
+                </Col>
+              </Row>
+              <Row className="px-2">
+                <Col sm={12} className="px-0 mt-2">
+                  <div className="signup-input">
+                    <input
+                      id="m_address3"
+                      type="text"
+                      name="m_address3"
+                      className="border-0"
+                      style={{ outline: "none", width: "100%" }}
+                      placeholder="상세주소"
+                      onBlur={handleBlur}
+                    ></input>
                   </div>
                 </Col>
               </Row>
@@ -593,17 +728,45 @@ const SignUp = () => {
                 <div className="signup-text">휴대전화</div>
               </Row>
               <Row className="px-2">
-                <div className="signup-input">
-                  <input
-                    id="m_phone"
-                    type="text"
-                    name="m_phone"
-                    className="border-0"
-                    style={{ outline: "none", width: "100%" }}
-                    placeholder="휴대전화 입력"
-                    onBlur={handleBlur}
-                  ></input>
-                </div>
+                <Col sm={2} className="px-0">
+                  <div className="signup-input" style={{ width: "100px" }}>
+                    <input
+                      id="m_phone1"
+                      type="text"
+                      name="m_phone1"
+                      className="border-0"
+                      style={{ outline: "none", width: "100%" }}
+                      placeholder="010"
+                      onBlur={handleBlur}
+                    ></input>
+                  </div>
+                </Col>
+                <Col sm={4} className="px-0" style={{ marginLeft: "47px" }}>
+                  <div className="signup-input">
+                    <input
+                      id="m_phone2"
+                      type="text"
+                      name="m_phone2"
+                      className="border-0"
+                      style={{ outline: "none", width: "100%" }}
+                      placeholder="앞 번호"
+                      onBlur={handleBlur}
+                    ></input>
+                  </div>
+                </Col>
+                <Col sm={4} className="px-0" style={{ marginLeft: "40px" }}>
+                  <div className="signup-input">
+                    <input
+                      id="m_phone3"
+                      type="text"
+                      name="m_phone3"
+                      className="border-0"
+                      style={{ outline: "none", width: "100%" }}
+                      placeholder="뒤 4자리"
+                      onBlur={handleBlur}
+                    ></input>
+                  </div>
+                </Col>
               </Row>
               {errorName === "m_phone" ? (
                 <ErrorMessage errorMessage={errorMessage} />

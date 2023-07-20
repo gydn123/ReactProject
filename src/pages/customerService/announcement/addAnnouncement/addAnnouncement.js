@@ -1,60 +1,55 @@
-import "./addAnnouncement.css";
-import { Container } from "react-bootstrap";
-import SelectType from "./component/selectType";
-import { useRef, useState } from "react";
 import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { Container } from "react-bootstrap";
+import styles from "./addAnnouncement.module.css";
+import SelectType from "./component/selectType";
 
-import ImageUpload from "./component/imageUpload";
 import Ckeditor from "../../components/ckeditor";
-import CustomerMove from "../../customerMove";
+import ImageUpload from "./component/imageUpload";
 
 function AddAnnouncement() {
   const titleInputRef = useRef("");
   const ckeditorData = useRef("");
-  const uploadedImages = useRef([]);
   const [content, setContent] = useState(undefined);
   const [selectedFiles, setSelectedFiles] = useState([]);
 
-  const handleValueChange = (slValue) => {
-    console.log(slValue);
-  };
+  useEffect(() => {
+    adminCheck();
+  }, []);
 
   const handleTitleValueChange = (TitleValue) => {
     titleInputRef.current = TitleValue;
   };
 
+  const adminCheck = () => {
+    const adminCheck = sessionStorage.getItem("ADMIN");
+    if (adminCheck === null) {
+      window.alert("권한이 없습니다!!");
+      window.location.href = "/";
+    }
+  };
+
   const fetchData = () => {
-    console.log(titleInputRef.current);
-    console.log(ckeditorData.current);
-    console.log(uploadedImages.current);
-
-    if (titleInputRef.current.length <= 3)
+    if (titleInputRef.current.length < 3) {
       window.alert("제목을 3글자 이상 입력해주세요!");
-    else {
-      try {
-        // 텍스트 데이터 전송
+      return;
+    }
 
-        const response = axios.post(
-          "http://localhost:8080/customer/insertAnnouncement",
-          {
-            c_title: titleInputRef.current,
-            c_content: ckeditorData.current,
-          }
-        );
-
+    axios
+      .post("http://localhost:8080/customer/insertAnnouncement", {
+        c_title: titleInputRef.current,
+        c_content: ckeditorData.current,
+      })
+      .then((response) => {
         const announcement_num = response.data;
-
         if (selectedFiles.length > 0) {
           // 이미지 데이터 전송
           const formData = new FormData();
-
           // 이미지 파일 추가
           selectedFiles.forEach((file) => {
             formData.append("file", file);
           });
-
           // boardId와 함께 이미지 업로드 API에 전송
-
           axios
             .post(
               `http://localhost:8080/customer/imageUpload?announcement_num=${announcement_num}`,
@@ -68,15 +63,11 @@ function AddAnnouncement() {
             .then(() => {
               window.location.href = "/announcement";
             })
-            .catch((error) => {
-              console.log(error);
-            });
+            .catch((error) => { });
+        } else {
+          window.location.href = "/announcement";
         }
-      } catch (error) {
-        console.log("HTTP error");
-        console.log(error);
-      }
-    }
+      });
   };
 
   function cancle() {
@@ -87,11 +78,10 @@ function AddAnnouncement() {
 
   return (
     <>
-      <section className="notice">
+      <section className={styles.notice}>
         <div className="create-Announcement" style={{ left: "200px" }}>
           <Container>
             <SelectType
-              onValueChange={handleValueChange}
               inputRef={titleInputRef}
               setTitleValue={handleTitleValueChange}
             />
@@ -133,5 +123,4 @@ function AddAnnouncement() {
     </>
   );
 }
-
 export default AddAnnouncement;

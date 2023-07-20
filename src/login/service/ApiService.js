@@ -40,6 +40,9 @@ export function login(memberDTO, longLogin, formData, setErrorMessage) {
       if (response.token) {
         localStorage.setItem("ACCESS_TOKEN", response.token);
         sessionStorage.setItem("MEMBER_ID", formData.member_id);
+        if (response.roles === "ROLE_admin") {
+          sessionStorage.setItem("ADMIN", "admin");
+        }
 
         // 로그인 버튼 눌렀을 떄 '아이디 자동입력 체크 상태" 확인 후 local 생성
         if (longLogin) {
@@ -54,14 +57,19 @@ export function login(memberDTO, longLogin, formData, setErrorMessage) {
 
         //이전 페이지로 돌아가기
         const pathName = new URL(document.referrer).pathname;
+        const params = new URL(document.referrer).searchParams;
         if (
           pathName === "/login" ||
           pathName === null ||
-          pathName === "/signup"
+          pathName === "/signup" ||
+          pathName === "/signUpComplete" ||
+          pathName === "/searchPw" ||
+          pathName === "/newPw" ||
+          pathName === "/pwComplete"
         ) {
-          window.location.href = "/main";
+          window.location.href = "/";
         } else {
-          window.location.href = pathName;
+          window.location.href = pathName + `?${params}`;
         }
       }
     })
@@ -79,4 +87,31 @@ export function socialLogin(provider) {
     provider +
     "?redirect_uri=" +
     window.location.origin;
+}
+
+export function EditMemberCom(formData) {
+  const request = {
+    member_id: formData.member_id,
+    m_email: formData.m_email,
+    m_birth: formData.m_birth,
+    m_phone: formData.m_phone,
+    m_address: formData.m_address,
+  };
+
+  console.log("밑에 hanldeClickHidden 들어간 후 formData");
+  console.log(formData);
+  console.log("formData.m_address : " + formData.m_address);
+  console.log("formData.m_email : " + formData.m_email);
+  console.log("formData.m_birth : " + formData.m_birth);
+  console.log("formData.m_phone : " + formData.m_phone);
+
+  call("/mypage/editMember", "POST", request).then((response) => {
+    if (response === 1) {
+      console.log("editmember 수정 성공");
+      alert("정보수정이 성공적으로 완료되었습니다.");
+      // window.location.href = "/main";
+    } else {
+      console.log("editmember 수정 실패");
+    }
+  });
 }

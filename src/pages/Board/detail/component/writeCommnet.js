@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { emojiList } from "./emojis";
+import styles from "../detail.module.css";
 
 function WriteComment(props) {
   const [comment, setComment] = useState("");
@@ -31,9 +32,20 @@ function WriteComment(props) {
     );
   };
 
+  const loginCheck = (member_id) => {
+    if (member_id === null) {
+      window.alert("로그인해주세요!");
+      return 0;
+    }
+  };
+
   function commentInsert() {
-    const member_id = "hong1";
+    const member_id = sessionStorage.getItem("MEMBER_ID");
     const comment = document.getElementById("comment");
+
+    if (loginCheck(member_id) === 0) {
+      return;
+    }
 
     if (member_id === null) {
       alert("로그인해주세요!");
@@ -42,7 +54,7 @@ function WriteComment(props) {
       alert("빈 내용은 작성하실 수 없습니다");
     } else {
       axios
-        .post("/board/reply-insert", {
+        .post("http://localhost:8080/board/reply-insert", {
           b_reply: comment.value,
           board_id: board_id,
           member_id: member_id,
@@ -57,9 +69,7 @@ function WriteComment(props) {
             // 필요한 다른 정보를 추가하세요
           });
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => { });
     }
   }
 
@@ -68,13 +78,14 @@ function WriteComment(props) {
       <textarea
         name="comment"
         id="comment"
+        className={styles.comment}
         cols=""
         rows="4"
         placeholder="여러분의 소중한 댓글을 입력해주세요."
         value={comment}
         onChange={limitComment}
       ></textarea>
-      <div id="emoticons">
+      <div className={styles.emoticons} id={styles.emoticons}>
         이모티콘:
         {emojiList.map((emojiData, index) => (
           <img
@@ -85,11 +96,11 @@ function WriteComment(props) {
             title={emojiData.title}
           />
         ))}
-        <div id="comment_cnt">
+        <div className={styles.comment_cnt} id={styles.comment_cnt}>
           ({comment.length} / 200)
           <input
             type="button"
-            className="btn btn-blue"
+            className={[styles.btn, styles.btn_blue].join(" ")}
             name="comment-insert"
             id="comment-insert"
             onClick={commentInsert}

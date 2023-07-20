@@ -14,6 +14,7 @@ function Menu({ onChangeSearchName, searchNameRef }) {
   const [kakao_id, setKakao_id] = useState("");
   const [m_image, setM_image] = useState("");
   const [kakao_name, setKakao_name] = useState("");
+  const [git_id, setGit_id] = useState("");
 
   // 카카오로그인
   useEffect(() => {
@@ -21,22 +22,36 @@ function Menu({ onChangeSearchName, searchNameRef }) {
       sessionStorage.getItem("MEMBER_ID") &&
       sessionStorage.getItem("KAKAO_ID")
     ) {
-      console.log("카카오로그인 접속");
       setKakao_name(sessionStorage.getItem("KAKAO_NAME"));
       setMember_id(sessionStorage.getItem("MEMBER_ID"));
       setKakao_id(sessionStorage.getItem("KAKAO_ID"));
-      // 일반로그인
-    } else if (sessionStorage.getItem("MEMBER_ID")) {
-      console.log("일반로그인 접속");
+
+      // git로그인
+    } else if (
+      sessionStorage.getItem("MEMBER_ID") &&
+      sessionStorage.getItem("GIT_ID")
+    ) {
+
+      setGit_id(sessionStorage.getItem("GIT_ID"));
+
       const request = {
         member_id: sessionStorage.getItem("MEMBER_ID"),
       };
 
       // 헤더바에 image 표출하기 위한 통신(member_Id에 저장된 정보 가지고 온다)
       call("/mypage/getMember", "POST", request).then((response) => {
-        console.log(response.member_id);
-        console.log("Menu // getMember 입력 받음");
-        console.log("Menu // getMember // m_image : " + response.m_image);
+        setMember_id(response.member_id);
+        setM_image(response.m_image);
+      });
+
+      // 일반로그인
+    } else if (sessionStorage.getItem("MEMBER_ID")) {
+      const request = {
+        member_id: sessionStorage.getItem("MEMBER_ID"),
+      };
+
+      // 헤더바에 image 표출하기 위한 통신(member_Id에 저장된 정보 가지고 온다)
+      call("/mypage/getMember", "POST", request).then((response) => {
         setMember_id(response.member_id);
         setM_image(response.m_image);
       });
@@ -46,7 +61,7 @@ function Menu({ onChangeSearchName, searchNameRef }) {
   }, []);
 
   return (
-    <header className=" header">
+    <header className="header">
       {["sm"].map((expand) => (
         <Navbar key={expand} expand={expand} className="bg-body-tertiary mb-3">
           <Container fluid>
@@ -113,6 +128,7 @@ function Menu({ onChangeSearchName, searchNameRef }) {
                     kakao_id={kakao_id}
                     m_image={m_image}
                     kakao_name={kakao_name}
+                    git_id={git_id}
                   />
                   <Form
                     action="/list"

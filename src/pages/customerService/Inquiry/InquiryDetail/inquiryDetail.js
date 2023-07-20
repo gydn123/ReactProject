@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import "./inquiryDetail.css";
+import styles from "./inquiryDetail.module.css";
 import InquiryDetailTop from "./component/inquiryDetailTop";
 import InquiryContent from "./component/inquiryContent";
 import ImgWrap from "./component/imageWrap";
@@ -19,6 +19,14 @@ function InquiryDetail() {
     getData();
   }, []);
 
+  // const userCheck = (originMember_id) => {
+  //   const loginMember_id = sessionStorage.getItem("MEMBER_ID");
+  //   const adminCheck = sessionStorage.getItem("ADMIN")
+  //   if (originMember_id === loginMember_id || adminCheck !== null) { return; }
+  //   window.alert("권한이 없습니다!")
+  //   window.location.href = "/"
+  // }
+
   const getData = async () => {
     const inquiry_num = addressParams.get("inquiry_num");
     setInquiry_num(inquiry_num);
@@ -30,8 +38,8 @@ function InquiryDetail() {
       })
 
       .then((response) => {
-        console.log(response.data);
         setViewData(response.data.data);
+        //userCheck(response.data.data);
         setIsLoading(false); // 데이터 로드 완료
       });
   };
@@ -49,7 +57,6 @@ function InquiryDetail() {
           params: { inquiry_num: inquiry_num },
         })
         .then(() => {
-          window.alert("삭제완료");
           window.location.href = "/inquiry";
         })
         .then(() => {
@@ -68,56 +75,64 @@ function InquiryDetail() {
 
   return (
     <>
-      <section className="notice">
-        <div className="wrap">
+      <section className={styles.notice}>
+        <div className={styles.wrap}>
           <div
-            className="view-wrap"
-            style={{ textAlign: "left", marginRight: 200 }}
+            className={styles.view_wrap}
+
           >
             {isLoading ? (
               <div>데이터를 불러오는 중...</div>
             ) : (
               <>
                 {/* 상단 */}
-                <div className="header">
+                <div className={styles.header}>
                   <InquiryDetailTop
                     viewData={viewData}
                     inquiry_num={inquiry_num}
                   />
                 </div>
                 <hr /> <br />
-                <div className="main-content">
-                  <div className="image-wrap">
+                <div className={styles.main_content}>
+                  <div className={styles.image_wrap}>
                     <ImgWrap inquiry_num={inquiry_num} />
                   </div>
 
-                  <div className="content">
+                  <div className={styles.content}>
                     <InquiryContent viewData={viewData} />
                   </div>
 
-                  {/* 답변이 없을시 */}
-                  {viewData && viewData.length === 1 && (
-                    <InquiryAnswer
-                      inquiry_num={inquiry_num}
-                      viewData={viewData}
-                    />
+
+
+
+                  {sessionStorage.getItem("ADMIN") === null ? (
+                    ""
+                  ) : (
+                    <>
+                      {viewData && viewData.length === 1 && (
+                        <InquiryAnswer
+                          inquiry_num={inquiry_num}
+                          viewData={viewData}
+                        />
+                      )}
+
+                      <div className={styles.view_btn}>
+                        <input
+                          type="button"
+                          className={[styles.btn, styles.btn_blue].join(" ")}
+                          id="board_delete"
+                          value="삭제"
+                          onClick={deleteInquiry}
+                          style={{ height: 40, width: 100 }}
+                        />
+                      </div>
+                    </>
                   )}
 
-                  {/* 글 삭제 (관리자) */}
-                  <div className="view-btn">
+                  <div className={styles.list_wrap}>
                     <input
                       type="button"
-                      className="btn btn-blue"
-                      id="board_delete"
-                      value="삭제"
-                      onClick={deleteInquiry}
-                    />
-                  </div>
-
-                  <div className="list-wrap">
-                    <input
-                      type="button"
-                      className=""
+                      className={styles.listback}
                       id="listback"
                       onClick={backToThe}
                       value="목록"
@@ -131,7 +146,7 @@ function InquiryDetail() {
             )}
           </div>
         </div>
-      </section>
+      </section >
     </>
   );
 }

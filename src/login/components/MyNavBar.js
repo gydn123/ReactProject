@@ -9,19 +9,17 @@ import {
   Row,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { SessionRemove } from "../service/sessionRemove";
 
 const MyNavbar = () => {
   const member_id = sessionStorage.getItem("MEMBER_ID"); // 세션에서 가져올 사용자 이름. 실제로는 서버에서 가져온 데이터로 구현해야 함
   const kakao_name = sessionStorage.getItem("KAKAO_NAME");
+  const git_id = sessionStorage.getItem("GIT_ID");
 
   function handleClickLogout() {
     const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
     if (confirmLogout) {
-      sessionStorage.removeItem("MEMBER_ID");
-      sessionStorage.removeItem("KAKAO_ID");
-      sessionStorage.removeItem("KAKAO_IMAGE");
-      sessionStorage.removeItem("KAKAO_NAME");
-      localStorage.removeItem("ACCESS_TOKEN");
+      SessionRemove();
       window.location.href = "/login";
     } else {
       return;
@@ -31,20 +29,16 @@ const MyNavbar = () => {
   return (
     <Col xs={3} className="my-5">
       <Row className="rounded-0 shadow mb-5" style={{ height: "100px" }}>
-        <div
-          id="divimage"
-          className="text-center"
-          style={{ marginTop: "30px" }}
-        >
-          {/* <i
+        <div id="divimage">
+          <i
             className="bi bi-person-circle"
             id="iimage"
             style={{ fontSize: "2.5rem", color: "cornflowerblue" }}
           >
             &nbsp;
-          </i> */}
+          </i>
           <span style={{ fontWeight: "bold" }}>
-            {kakao_name ? kakao_name : member_id}
+            {kakao_name || git_id || member_id}
           </span>
           님 환영합니다
         </div>
@@ -56,7 +50,7 @@ const MyNavbar = () => {
               <i className="bi bi-clipboard-check rounded-0"></i>나의 활동 정보
             </Accordion.Header>
             <Accordion.Body>
-              <Link to="/orderlist" className="text-decoration-none text-dark">
+              <Link to="/mypage/orderlist" className="text-decoration-none text-dark">
                 <div className="rounded shadow mb-3 p-3">
                   <i className="bi bi-cart"></i>구매 내역
                 </div>
@@ -70,18 +64,18 @@ const MyNavbar = () => {
                 </div>
               </Link>
               <Link
-                to="/writeList/1"
+                to="/mypage/writeList/1"
                 className="text-decoration-none text-dark"
               >
                 <div className="rounded shadow mb-3 p-3">
                   <i className="bi bi-chat-right-text"></i>댓글 리스트
                 </div>
               </Link>
-              {/* <Link to="/refund" className="text-decoration-none text-danger">
+              <Link to="/mypage/refund" className="text-decoration-none text-danger">
                 <div className="rounded shadow mb-3 p-3">
                   <i className="bi bi-cart-dash-fill text-danger"></i>환불 신청
                 </div>
-              </Link> */}
+              </Link>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
@@ -91,10 +85,7 @@ const MyNavbar = () => {
               <i className="bi bi-person-gear "></i>내 정보 수정
             </div>
           </Link>
-          <Link
-            to={`/mypoint?member_id=${member_id}`}
-            className="text-decoration-none text-dark"
-          >
+          <Link to="/mypoint" className="text-decoration-none text-dark">
             <div className="rounded-0 shadow mb-3 p-3">
               <i className="bi bi-credit-card"></i>나의 포인트
             </div>

@@ -1,7 +1,7 @@
+import styles from "../announcement.module.css";
+
 function PagingNumberLogic({ searchValue, pageNumber, totalPages }) {
   // 페이지 번호를 10 단위로 설정합니다.
-  console.log(pageNumber);
-  console.log(totalPages.current);
   let startPage = Math.floor((pageNumber.current - 1) / 10) * 10 + 1;
   let endPage = startPage + 9;
 
@@ -17,7 +17,6 @@ function PagingNumberLogic({ searchValue, pageNumber, totalPages }) {
     pageNumbers[arrNum] = i;
     arrNum++;
   }
-  console.log(startPage);
   // 페이지 이동시 처리할 로직
   const handlePageClick = (clickedPageNum) => {
     let pageNum = clickedPageNum;
@@ -63,6 +62,7 @@ function PagingNumberLogic({ searchValue, pageNumber, totalPages }) {
             e.preventDefault();
             handlePageClick(num);
           }}
+          className={num === pageNumber ? "page_active" : ""}
           style={{ margin: "0 5px" }}
         >
           {num}
@@ -76,6 +76,7 @@ function PagingNumberLogic({ searchValue, pageNumber, totalPages }) {
               e.preventDefault();
               endPage % 10 === 0 && handlePageClick(endPage + 1);
             }}
+            className={styles.page_next}
           >
             Next
           </a>
@@ -85,6 +86,7 @@ function PagingNumberLogic({ searchValue, pageNumber, totalPages }) {
               e.preventDefault();
               handlePageClick(totalPages.current);
             }}
+            className={styles.page_end}
           >
             End
           </a>

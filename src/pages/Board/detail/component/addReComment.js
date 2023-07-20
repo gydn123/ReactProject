@@ -1,21 +1,34 @@
 import axios from "axios";
 import { useRef, useState } from "react";
 import { emojiList } from "./emojis";
+import styles from "../detail.module.css";
 
 function AddReComment(props) {
   const { index, toggleReply, commentList, getCommentList } = props;
   const textAreaRef = useRef();
   const [comment, setComment] = useState("");
 
-  const insertReComment = async () => {
+  const loginCheck = (member_id) => {
+    if (member_id === null) {
+      window.alert("로그인해주세요!");
+      return 0;
+    }
+  };
+
+  const insertReComment = () => {
+    const member_id = sessionStorage.getItem("MEMBER_ID");
     const reply = textAreaRef.current.value;
+
+    if (!loginCheck(member_id) == 0) {
+      return; // loginCheck 함수의 반환 값이 false인 경우 함수 종료
+    }
 
     if (reply.length < 3) {
       window.alert("네글자이상 입력해주세요!!");
     } else {
-      await axios
-        .post("/board/insertReReply", {
-          member_id: "hong1",
+      axios
+        .post("http://localhost:8080/board/insertReReply", {
+          member_id: member_id,
           board_id: commentList.board_id,
           b_reply: reply,
           ref: commentList.ref,
@@ -60,7 +73,7 @@ function AddReComment(props) {
       <td style={{ width: "40%" }} colSpan={4}>
         <textarea
           ref={textAreaRef}
-          className="re_comment"
+          className={styles.re_comment}
           id="re_comment"
           value={comment}
           onChange={limitComment}
@@ -74,7 +87,7 @@ function AddReComment(props) {
           }}
           rows={4}
         ></textarea>
-        <div id="emoticons">
+        <div className={styles.emoticons} id="emoticons">
           이모티콘:
           {emojiList.map((emojiData, index) => (
             <img
@@ -85,7 +98,9 @@ function AddReComment(props) {
               title={emojiData.title}
             />
           ))}
-          <div id="comment_cnt">({comment.length} / 200)</div>
+          <div className={styles.comment_cnt} id="comment_cnt">
+            ({comment.length} / 200)
+          </div>
         </div>
 
         <div style={{ float: "right", width: "40%" }}>

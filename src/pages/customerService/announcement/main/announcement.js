@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import React from "react";
 
-import "./announcement.css";
+import styles from "./announcement.module.css";
 import AnnouncementList from "./component/announcementList";
 
 function Announcement() {
   return (
-    <div>
-      <section className="notice">
-        <div className="board-list">
-          <div className="page-title">
+    <>
+      <section className={styles.notice}>
+        <div className={styles.anno_list}>
+          <div className={styles.page_title} style={{ marginRight: 100 }}>
             <h1>공지사항</h1>
           </div>
-          <br></br>
-          <div className="container" style={{ marginLeft: 75, margin: "auto" }}>
-            <AnnouncementList></AnnouncementList>
+          <br />
+          <div className={styles.anno_container}>
+            <AnnouncementList />
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }
 

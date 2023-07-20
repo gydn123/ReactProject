@@ -20,11 +20,7 @@ function CustomerMove({ children }) {
   };
 
   return (
-    <div
-      className="menu_select customermove"
-      onClick={move}
-      style={{ right: 200 }}
-    >
+    <div className="menu_select customermove" onClick={move}>
       <span onClick={() => handleLinkClick("/")} style={{ cursor: "pointer" }}>
         <img
           src="https://cdn-icons-png.flaticon.com/512/20/20176.png"
@@ -32,7 +28,7 @@ function CustomerMove({ children }) {
         />
         |
       </span>
-      <div className="text">
+      <div className="text" style={{ marginRight: 200, marginTop: 100 }}>
         <span>
           <b>공지사항</b>
         </span>
@@ -47,7 +43,7 @@ function CustomerMove({ children }) {
             </a>
           </li>
           <li>
-            <a href="#" onClick={() => handleLinkClick("/faq?f_type=")}>
+            <a href="#" onClick={() => handleLinkClick("/faq")}>
               FAQ
             </a>
           </li>

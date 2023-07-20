@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import styles from "../inquiryDetail.module.css";
 function ImgWrap({ inquiry_num }) {
   const [imageData, setImageData] = useState([]);
 
@@ -19,13 +19,12 @@ function ImgWrap({ inquiry_num }) {
         setImageData(response.data.data);
       })
       .catch((error) => {
-        console.log(error);
       });
   };
 
   return (
     <>
-      <div className="image-inner-wrap">
+      <div className={styles.image_inner_wrap}>
         {imageData &&
           imageData.map((img, index) => (
             <a href={img.boardimg} key={index}>

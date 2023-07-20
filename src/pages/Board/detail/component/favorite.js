@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import styles from "../detail.module.css";
 
 function Favorite(props) {
   const { viewData } = props;
@@ -14,47 +15,53 @@ function Favorite(props) {
 
   const fetchFavoriteData = async () => {
     await axios
-      .get("/board/favoriteBoard", {
+      .get("http://localhost:8080/board/favoriteBoard", {
         params: {
           board_id: viewData.board_id,
         },
       })
       .then((response) => {
-        console.log(response);
         setFavoriteData(response.data[0]);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
 
   if (favoriteData === null) {
     return <div>Loading...</div>;
   }
 
+  const loginCheck = (member_id) => {
+    if (member_id === null) {
+      window.alert("로그인해주세요!");
+      return 0;
+    }
+    return 1;
+  };
+
   const handleFavoriteEvent = (rs) => {
-    // if (member_id === null) {
-    //     alert('로그인해주세요!');
-    // } else {
-    axios
-      .post("/board/favoriteBoard", {
-        board_id: viewData.board_id,
-        checkData: rs,
-        member_id: "hong1",
-        //favorite: viewData.favorite,
-        // hate: viewData.hate
-      })
-      .then((response) => {
-        fetchFavoriteData();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const member_id = sessionStorage.getItem("MEMBER_ID");
+    let loginChec = loginCheck(member_id);
+
+    if (loginChec === 1) {
+      axios
+        .post("http://localhost:8080/board/favoriteBoard", {
+          board_id: viewData.board_id,
+          checkData: rs,
+          member_id: member_id,
+          //favorite: viewData.favorite,
+          // hate: viewData.hate
+        })
+        .then((response) => {
+          fetchFavoriteData();
+        })
+        .catch((error) => {});
+    }
+
     // }
   };
 
   return (
-    <div className="favorite">
+    <div className={styles.favorite}>
       <span>{favoriteData.favorite}</span>
       <span style={{ margin: "0 10px" }}></span>
       <span onClick={() => handleFavoriteEvent(1)}>

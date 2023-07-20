@@ -1,4 +1,4 @@
-import "./addBoard.css";
+import styles from "./addBoard.module.css";
 import { Container } from "react-bootstrap";
 import SelectType from "./component/selectType";
 import { useRef, useState } from "react";
@@ -13,26 +13,37 @@ function AddBoard() {
   const [content, setContent] = useState(undefined);
   const [selectedFiles, setSelectedFiles] = useState([]);
 
-  const fetchData = async () => {
+  const checkLogin = () => {
+    const member_id = sessionStorage.getItem("MEMBER_ID");
+    if (member_id === null) {
+      window.alert("로그인해주세요!");
+      return;
+    } else {
+      fetchData(member_id);
+    }
+  };
+
+  const fetchData = async (member_id) => {
     if (typeSelect.current === "0") window.alert("게시판 태그를 선택해주세요!");
-    else if (titleInputRef.current.length <= 3)
+    else if (titleInputRef.current.length < 3)
       window.alert("제목을 3글자 이상 입력해주세요!");
-    else if (ckeditorData.current.length <= 5)
+    else if (ckeditorData.current.length < 5)
       window.alert("본문은 5글자 이상 입력해주세요!");
     else {
       try {
         // 텍스트 데이터 전송
         const response = await axios.post(
-          "http://localhost:8080/board/createBoard",
+          "http://localhost:8080/board/addBoard",
           {
             b_title: titleInputRef.current,
             b_type: typeSelect.current,
             b_content: ckeditorData.current,
+            member_id: member_id,
           }
         );
 
         const data = response.data;
-        const boardId = data;
+        const board_id = data;
 
         if (selectedFiles.length > 0) {
           window.location.href = "/board";
@@ -46,15 +57,19 @@ function AddBoard() {
         });
 
         // boardId와 함께 이미지 업로드 API에 전송
-        await axios.post(
-          `http://localhost:8080/board/imageUpload/${boardId}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        await axios
+          .post(
+            `http://localhost:8080/board/imageUpload/${board_id}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then(() => {
+            window.location.href = "/board";
+          });
       } catch (error) {}
     }
   };
@@ -66,7 +81,11 @@ function AddBoard() {
   }
 
   return (
-    <div className="create-board">
+    <div
+      className={styles.board_create_board}
+      id="create-board"
+      style={{ marginTop: 75, marginBottom: 120 }}
+    >
       <Container>
         <SelectType typeSelect={typeSelect} inputRef={titleInputRef} />
         <hr />
@@ -82,19 +101,25 @@ function AddBoard() {
         />
 
         <br />
-        <div id="insert-btn-wrap">
+        <div
+          id={styles.insert_btn_wrap}
+          className={[
+            styles.insert_btn_wrap,
+            styles[(styles.btn, styles.btn_blue)],
+          ].join(" ")}
+        >
           <input
             type="button"
-            id="cancle-btn"
-            className="btn btn-blue"
+            className={[styles.btn, styles.btn_blue].join(" ")}
+            id={styles.cancle_btn}
             onClick={cancle}
             value="취소"
           />
           <input
             type="submit"
-            className="btn btn-blue"
+            className={[styles.btn, styles.btn_blue].join(" ")}
             id="submit"
-            onClick={fetchData}
+            onClick={checkLogin}
             value="확인"
           />
         </div>

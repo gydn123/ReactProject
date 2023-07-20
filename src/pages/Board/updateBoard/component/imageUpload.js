@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-
+import styles from "../updateBoard.module.css";
 function ImageUpload({
   member_id,
   setSelectedFiles,
@@ -13,7 +13,6 @@ function ImageUpload({
     const files = e.target.files;
     const filesArr = Array.prototype.slice.call(files);
 
-    console.log(files);
     // 이미지 파일만 선택
     const imageFiles = filesArr.filter((file) => file.type.match("image.*"));
 
@@ -33,7 +32,6 @@ function ImageUpload({
     e.preventDefault();
 
     // 이미지 파일 업로드 로직 구현
-    console.log(selectedFiles);
   };
 
   const renderOriginBoardImg = () => {
@@ -58,7 +56,7 @@ function ImageUpload({
 
     if (result) {
       try {
-        await axios.delete(`/board/deleteBoardImg`, {
+        await axios.delete(`http://localhost:8080/board/deleteBoardImg`, {
           params: {
             boardimg_num: boardimg_num,
           },
@@ -69,26 +67,29 @@ function ImageUpload({
           originBoardImg.filter((img) => img.boardimgNum !== boardimgNum)
         );
         setImageCheck(boardimgNum);
-      } catch (error) {
-        console.error("Error deleting image:", error);
-      }
+      } catch (error) {}
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div id="boardImgOrigin">
+      <div
+        id="boardImgOrigin"
+        className={`${styles.boardImgOrigin} boardImgOrigin`}
+      >
         <h2>본문 이미지</h2>
-        <div className="image_wrap">{renderOriginBoardImg()}</div>
-        <div className="imgs_file">
+        <div className={`${styles.image_wrap} image_wrap`}>
+          {renderOriginBoardImg()}
+        </div>
+        <div className={`${styles.imgs_file} imgs_file`}>
           <h2>
             <b>이미지 미리보기</b>
           </h2>
-          <div className="input_wrap">
+          <div className={`${styles.input_wrap} input_wrap`}>
             <button
               type="button"
               onClick={() => document.getElementById("input_imgs").click()}
-              className="my_button"
+              className={`${styles.my_button} my_button`}
             >
               파일 업로드
             </button>
@@ -106,13 +107,13 @@ function ImageUpload({
         </div>
 
         <div>
-          <div className="imgs_wrap">
+          <div className={`${styles.imgs_wrap} imgs_wrap`}>
             {selectedFiles &&
               selectedFiles.map((file, index) => (
                 <a onClick={() => handleDeleteFile(index)} key={index}>
                   <img
                     src={URL.createObjectURL(file)}
-                    className="selProductFile"
+                    className={`${styles.selProductFile} selProductFile`}
                     title="Click to remove"
                   />
                 </a>

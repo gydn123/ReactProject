@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "../updateBoard.module.css";
 
 function SelectType(props) {
   const { setTitleValue, b_title, typeSelect, setTypeSelect } = props;
-
-  // useEffect(() => {
-  //     console.log(titleValue.)
-  // }, [titleValue]);
-  useEffect(() => {}, []);
 
   const selectType = [
     { name: "선택", id: "option", value: "0" },
@@ -29,11 +25,11 @@ function SelectType(props) {
   };
 
   return (
-    <div>
-      <div className="create-window">
-        <div className="top-wrap">
+    <>
+      <div className={styles.board_create_window} id="create-window">
+        <div className={styles.top_wrap} id="top-wrap">
           <select
-            className="form-select"
+            className={`${styles.form_select} form-select`}
             name="b_type"
             aria-label="Default select example"
             onChange={changeSelectValue}
@@ -47,7 +43,7 @@ function SelectType(props) {
           </select>
           <br />
         </div>
-        <div className="form-floating mb-3">
+        <div className={`form-floating mb-3 ${styles.form_floating}`}>
           <input
             type="text"
             className="form-control"
@@ -59,7 +55,7 @@ function SelectType(props) {
           <label htmlFor="flootingInput">제목</label>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

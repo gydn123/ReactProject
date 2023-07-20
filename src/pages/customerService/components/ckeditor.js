@@ -1,7 +1,7 @@
 import React from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-
+import "./ckeditor.css";
 const Ckeditor = ({ onImageUpload, ckeditorData, content }) => {
   const customUploadAdapter = (loader) => {
     return {
@@ -29,6 +29,11 @@ const Ckeditor = ({ onImageUpload, ckeditorData, content }) => {
       return customUploadAdapter(loader);
     };
   }
+
+  ClassicEditor.defaultConfig = {
+    ...ClassicEditor.defaultConfig,
+    minHeight: "400px", // 원하는 높이로 설정
+  };
 
   //참이면 글 생성 / 거짓이면 글 수정
   const dataToRender = content !== undefined ? `${content}` : "";

@@ -3,14 +3,10 @@ import KaKaoInfo from "./KaKaoInfo";
 
 function KakaoAPI() {
   const openWindow = () => {
-    const btnOpen = document.getElementById("btn_open");
-    console.log(btnOpen);
     let open = document.querySelector(".pop_wrap");
     open.style.display = "block";
   };
   const closeWindow = () => {
-    const btnOpen = document.getElementById("btn_open");
-    console.log(btnOpen);
     let open = document.querySelector(".pop_wrap");
     open.style.display = "none";
   };
