@@ -18,11 +18,11 @@ import { useRef } from "react";
 import Footer from "./index/components/Footer";
 import { GithubLogin } from "./login/views/githubLogin";
 
-import Order from "./component/order";
-import Promotion from "./component/Promotion";
-import Promotionprice from "./component/Promotionprice";
-import Mypoint from "./component/mypoint";
-import Orderlist from "./component/orderlist";
+import Order from "./promotion/order";
+import Promotion from "./promotion/Promotion";
+import Promotionprice from "./promotion/Promotionprice";
+import Mypoint from "./promotion/mypoint";
+import Orderlist from "./promotion/orderlist";
 import ElasticBoard from "./pages/Board/main/ElasticBoard";
 import AddBoard from "./pages/Board/addBoard/addBoard";
 import Detail from "./pages/Board/detail/detail";
