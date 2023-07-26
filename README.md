@@ -31,6 +31,22 @@
 | Data and Visualization | ![ElasticSearch](https://img.shields.io/badge/-ElasticSearch-005571?style=for-the-badge&logo=elasticsearch) ![Kibana](https://img.shields.io/badge/Kibana-%236674a4.svg?style=for-the-badge&logo=kibana&logoColor=white) ![Logstash](https://img.shields.io/badge/Logstash-%234A138A.svg?style=for-the-badge&logo=logstash&logoColor=white) |
 | Others | ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white) |
 
+- # 사용 버전
+### JAVA : 11
+
+### SpringBoot FrameWork : 2.7.14-SNAPSHOT
+
+### node v14.21.3
+
+### npm v6.14.18
+
+### react@18.2.0
+
+### Elasticsearch-7.17.10
+
+### kibana-7.17.10
+
+### logstash-7.17.10
 
 # 담당파트
 
