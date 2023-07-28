@@ -57,6 +57,13 @@
 - ## 게시판페이지의 DB정보를 MySql이 아닌 ElasticSearch 를 사용하여 정보 가져오기 
 <br/>
 
+# 프로모션,구매,포인트의 개체관계도
+![erd](https://github.com/gydn123/SpringProject/assets/121388591/78b06443-a065-4952-8644-9d751e57cd25)
+
+- 프로모션과 티켓가격은 해당 프로모션이 끝나면 정상가격으로 반영되어야 하기때문에 2개의 테이블로 나눔
+- 오더 테이블엔 사용한 포인트와 구매확정,환불을 가려내는 컬럼으로 확인 orders_detail 테이블엔 해당 티켓의 교유 id값과 수량을 확인
+- 그리고 구매확정이나 환불에 true값이 전달이되면 mypoint에 적립 유무 결정 (ex. checkorder가 ture값이면 적립)
+- delete문 사용 없이 insert 와 update문만 사용을해서 누락없이 모든 구매내역의 기록을 확인가능
 
 
 # 프로모션 진행
@@ -87,10 +94,4 @@
 ![포인트내역](https://github.com/gydn123/SpringProject/assets/121388591/c297c66b-126a-48c5-a46e-14fb8a841e3e)
 - 총 사용가능한 포인트와 적립,사용이력을 확인
 
-# 프로모션,구매,포인트의 개체관계도
-![erd](https://github.com/gydn123/SpringProject/assets/121388591/78b06443-a065-4952-8644-9d751e57cd25)
 
-- 프로모션과 티켓가격은 해당 프로모션이 끝나면 정상가격으로 반영되어야 하기때문에 2개의 테이블로 나눔
-- 오더 테이블엔 사용한 포인트와 구매확정,환불을 가려내는 컬럼으로 확인 orders_detail 테이블엔 해당 티켓의 교유 id값과 수량을 확인
-- 그리고 구매확정이나 환불에 true값이 전달이되면 mypoint에 적립 유무 결정 (ex. checkorder가 ture값이면 적립)
-- delete문 사용 없이 insert 와 update문만 사용을해서 누락없이 모든 구매내역의 기록을 확인가능
